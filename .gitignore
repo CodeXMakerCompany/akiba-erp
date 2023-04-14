@@ -8,7 +8,7 @@
 .pnp.js
 
 # testing
-/coverage
+/akiba-street-cost-control/coverage
 
 # production
 /build
@@ -32,8 +32,6 @@ akiba-street-cost-control/amplify/mock-data
 akiba-street-cost-control/amplify/mock-api-resources
 akiba-street-cost-control/amplify/backend/amplify-meta.json
 akiba-street-cost-control/amplify/backend/.temp
-akiba-street-cost-control/build/
-akiba-street-cost-control/dist/
 akiba-street-cost-control/aws-exports.js
 akiba-street-cost-control/awsconfiguration.json
 akiba-street-cost-control/amplifyconfiguration.json
