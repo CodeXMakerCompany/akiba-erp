@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-akibastreetcostcontr-dev-101131-authRole",
+      "UnauthRoleArn": "arn:aws:iam::829055281972:role/amplify-akibastreetcostcontr-dev-101131-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::829055281972:role/amplify-akibastreetcostcontr-dev-101131-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-akibastreetcostcontr-dev-101131-deployment",
+      "UnauthRoleName": "amplify-akibastreetcostcontr-dev-101131-unauthRole",
+      "StackName": "amplify-akibastreetcostcontr-dev-101131",
+      "StackId": "arn:aws:cloudformation:us-east-2:829055281972:stack/amplify-akibastreetcostcontr-dev-101131/a7b7adb0-d168-11ed-85f3-068e7f8c2a65",
+      "AmplifyAppId": "dv3elopo3m0bn"
+    }
+  }
+}
