@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  server:
+    container_name: backend
+    restart: always
+    volumes:
+      - ./akiba-cost-control-server:/backend
+      - /backend/node_modules
+    build:
+      context: ./akiba-cost-control-server
+      dockerfile: Dockerfile.back
+    env_file:
+    - ./akiba-cost-control-server/docker.env  
+    ports:
+      - '3001:3001'
+
+  client:
+    container_name: frontend
+    restart: always
+    volumes:
+      - ./akiba-street-cost-control:/app
+      - /akiba-street-cost-control/node_modules
+    build:
+      context: ./akiba-street-cost-control
+      dockerfile: ./Dockerfile.client
+    environment:
+      - PORT=3104
+      - BACK_URL=http://localhost:3001
+    ports:
+      - 3104:3104
+    links:
+      - "server"
+    depends_on:
+      - server 

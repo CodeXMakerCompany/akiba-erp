@@ -1,0 +1,12 @@
+FROM node:16.15-alpine3.15
+
+WORKDIR /backend
+
+COPY package*.json ./backend
+
+RUN yarn
+RUN npm install dotenv
+
+COPY . /backend
+
+CMD ["npm", "run", "dev"]
