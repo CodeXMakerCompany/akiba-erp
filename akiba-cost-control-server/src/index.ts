@@ -9,6 +9,7 @@ import CategoryRoutes from "./routes/category";
 import SalesRoutes from "./routes/sales";
 import UploadRoutes from "./routes/upload";
 import ProductRoutes from "./routes/product";
+import EventRoutes from "./routes/events";
 
 const app: express.Application = express();
 const port: number | string = process.env.SERVER_PORT || 8000;
@@ -36,5 +37,6 @@ app.use("/category", CategoryRoutes);
 app.use("/sales", SalesRoutes);
 app.use("/upload", UploadRoutes);
 app.use("/product", ProductRoutes);
+app.use("/event", EventRoutes);
 
 app.listen(port);

@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-import mongoosePaginate from "mongoose-paginate-v2";
+import mongoosePaginate from "mongoose-paginate-ts";
 
 export interface ICategory {
   name: string;
@@ -19,6 +19,6 @@ const categorySchema = mongoose.model<ICategory>(
   })
 );
 
-categorySchema.schema.plugin(mongoosePaginate);
+// categorySchema.schema.plugin(mongoosePaginate);
 
 export default categorySchema;
