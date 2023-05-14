@@ -11,65 +11,56 @@ import {
   ModalState,
   updateModalStatus,
 } from "../../redux/slices/modal/modal.slice";
+import apiInstance from "../../api/api";
+import { RootState } from "../../redux/store";
+import { BasePagination } from "../../common/components/pagination";
+
+const api = apiInstance();
 
 const TableHeaders: Array<InterfaceHeader> = [
   {
-    label: "Order Id",
-    value: "id",
+    label: "User",
+    value: "_id",
     align: "center",
   },
   {
-    label: "Category",
-    value: "category",
-    align: "right",
+    label: "Payment Method",
+    value: "payment_method",
+    align: "center",
   },
   {
-    label: "Customer Email",
-    value: "customer_email",
-    align: "right",
+    label: "Total",
+    value: "total",
+    align: "center",
   },
   {
-    label: "Sold on",
-    value: "sale_date",
-    align: "right",
+    label: "Earning",
+    value: "net_earning",
+    align: "center",
   },
-  // "products",
-  // "qty",
   {
-    label: "Total Sold",
-    value: "total_value",
-    align: "right",
-  },
-  // "operative_expenses",
-  {
-    label: "Guide",
-    value: "tracking_guide",
-    align: "right",
+    label: "Realized on",
+    value: "created_at",
+    align: "center",
   },
 ];
 
 const SalesPage = () => {
   const dispatch = useDispatch();
-  const { openModal } = useSelector(
-    (state: { modal: ModalState }) => state.modal
-  );
-  const data = useLoaderData();
+  const {
+    modal: { openModal },
+    sales: { sales },
+  } = useSelector((state: RootState) => state);
+  const data: any = useLoaderData();
   const navigation = useNavigation();
   console.log(data);
+
+  console.log(sales);
 
   if (navigation.state === "loading") {
     return <h1>Loading...</h1>;
   }
-  const tableData = [
-    {
-      id: "0001",
-      category: "cat01",
-      customer_email: "codex@gmail.com",
-      sale_date: "2014-",
-      total_value: "34.00",
-      tracking_guide: "asdads57a45d4",
-    },
-  ];
+
   return (
     <Container>
       <h1>Sales</h1>
@@ -82,11 +73,20 @@ const SalesPage = () => {
           Add new sale
         </Button>
         {navigation.state === "idle" ? (
-          <DynamicTable
-            headers={TableHeaders}
-            data={tableData}
-            entity={"sales"}
-          />
+          <>
+            <DynamicTable
+              headers={TableHeaders}
+              data={sales.length ? sales : data.sales}
+              entity={"sales"}
+            />
+            <BasePagination
+              itemsPerPage={10}
+              page={1}
+              totalItems={data.totalDocs}
+              setPage={(e: any) => console.log(e)}
+              styles={{}}
+            />
+          </>
         ) : null}
         <SalesModal type={"Sales"} mode={"Create"} isOpen={openModal} />
       </div>
@@ -95,19 +95,16 @@ const SalesPage = () => {
 };
 
 export const SalesLoader = async () => {
-  const urlA = "http://localhost:3001/category/all";
-  // const urlB = "http://localhost:3001/sales/all";
-  const responseA = await fetch(urlA);
-  console.log(responseA);
+  const salesResponse = await api.post("/sales/all", {
+    page: 1,
+    limit: 10,
+  });
 
-  // const responseB = await fetch(urlB);
-  const categories: any = responseA.json();
-  console.log(categories);
-
-  // const sales: any = responseB.json();
   return {
-    categories,
-    // sales,
+    sales: salesResponse.data?.sales,
+    totalDocs: salesResponse.data?.totalDocs,
+    totalPages: salesResponse.data?.totalPages,
+    page: salesResponse.data?.page,
   };
 };
 

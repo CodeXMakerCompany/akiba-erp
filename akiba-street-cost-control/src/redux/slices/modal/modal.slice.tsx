@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface ModalState {
   openModal: boolean;
   categories: Array<any>;
+  dateSelection: any;
 }
 
 const initialState: ModalState = {
   openModal: false,
   categories: [],
+  dateSelection: null,
 };
 
 export const modalSlice = createSlice({
@@ -20,10 +22,14 @@ export const modalSlice = createSlice({
     feedInputsOptions: (state, { payload }) => {
       state.categories = payload;
     },
+    feedDateSelection: (state, { payload }) => {
+      state.dateSelection = payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateModalStatus, feedInputsOptions } = modalSlice.actions;
+export const { updateModalStatus, feedInputsOptions, feedDateSelection } =
+  modalSlice.actions;
 
 export default modalSlice.reducer;

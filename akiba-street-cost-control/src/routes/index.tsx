@@ -11,7 +11,7 @@ import DashboardPage from "../pages/dashboard";
 import SalesPage, { SalesLoader } from "../pages/sales";
 import CategoriesPage, { CategoriesLoader } from "../pages/categories";
 import ProductPage, { ProductsLoader } from "../pages/product";
-import CalendarPage from "../pages/calendar";
+import CalendarPage, { EventsLoader } from "../pages/calendar";
 import {
   Box,
   CssBaseline,
@@ -20,7 +20,6 @@ import {
   IconButton,
   List,
   styled,
-  Theme,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -209,10 +208,10 @@ const MainRouter = () => {
         <Route
           path="/calendar"
           element={<CalendarPage />}
-          // loader={ProductsLoader}
+          loader={EventsLoader}
           errorElement={<UnexpectedError />}
         >
-          Products
+          Calendar
         </Route>
       </Route>
     )

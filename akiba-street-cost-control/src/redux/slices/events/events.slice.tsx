@@ -1,53 +1,52 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createSale, fetchSales } from "./actions";
+import { createEvent, fetchEvents } from "./actions";
 
-export interface ModalState {
-  sales: Array<any>;
+export interface EventsState {
+  events: Array<any>;
   isLoading: boolean;
   error: boolean;
 }
 
-const initialState: ModalState = {
-  sales: [],
+const initialState: EventsState = {
+  events: [],
   isLoading: false,
   error: false,
 };
 
-export const salesSlice = createSlice({
-  name: "sales",
+export const eventsSlice = createSlice({
+  name: "events",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(createSale.pending, (state, action) => {
+    builder.addCase(createEvent.pending, (state, action) => {
       state.isLoading = true;
       // both `state` and `action` are now correctly typed
       // based on the slice state and the `pending` action creator
     });
-    builder.addCase(createSale.rejected, (state, action) => {
-      // both `state` and `action` are now correctly typed
-      // based on the slice state and the `pending` action creator
+    builder.addCase(createEvent.rejected, (state, action) => {
+      state.error = true;
     });
-    builder.addCase(createSale.fulfilled, (state, action) => {
-      console.log(state);
-      console.log(action);
+    builder.addCase(createEvent.fulfilled, (state, action) => {
+      state.isLoading = false;
 
       // both `state` and `action` are now correctly typed
       // based on the slice state and the `pending` action creator
     });
 
-    builder.addCase(fetchSales.pending, (state, action) => {
+    builder.addCase(fetchEvents.pending, (state, action) => {
       state.isLoading = true;
       // both `state` and `action` are now correctly typed
       // based on the slice state and the `pending` action creator
     });
-    builder.addCase(fetchSales.rejected, (state, action) => {
+    builder.addCase(fetchEvents.rejected, (state, action) => {
       state.error = false;
       // both `state` and `action` are now correctly typed
       // based on the slice state and the `pending` action creator
     });
-    builder.addCase(fetchSales.fulfilled, (state, { payload }) => {
+    builder.addCase(fetchEvents.fulfilled, (state, { payload }) => {
       state.isLoading = false;
-      state.sales = payload?.data?.sales;
+      state.events = payload?.data?.events;
+      // state.events = payload?.events;
       // both `state` and `action` are now correctly typed
       // based on the slice state and the `pending` action creator
     });
@@ -55,6 +54,6 @@ export const salesSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {} = salesSlice.actions;
+export const {} = eventsSlice.actions;
 
-export default salesSlice.reducer;
+export default eventsSlice.reducer;

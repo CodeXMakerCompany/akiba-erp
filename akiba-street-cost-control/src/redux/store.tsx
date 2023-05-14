@@ -3,12 +3,17 @@ import category from "./slices/category/category.slice";
 import modal from "./slices/modal/modal.slice";
 import upload from "./slices/uploads/uploads.slice";
 import product from "./slices/products/products.slice";
+import sales from "./slices/sales/sales.slice";
+import events from "./slices/events/events.slice";
+
 export const store = configureStore({
   reducer: {
     category,
     modal,
     upload,
     product,
+    sales,
+    events,
   },
 });
 

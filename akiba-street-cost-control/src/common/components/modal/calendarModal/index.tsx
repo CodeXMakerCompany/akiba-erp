@@ -1,30 +1,27 @@
 import { Button, TextField } from "@mui/material";
 import { Container } from "@mui/system";
-import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import dayjs from "dayjs";
+import { createEvent } from "../../../../redux/slices/events/actions";
+import { updateModalStatus } from "../../../../redux/slices/modal/modal.slice";
 
 const CalendarModal = () => {
-  const [event, setEvent] = useState<{ title: string; start: Date }>({
-    title: "new Event",
-    start: new Date(),
-  });
-  const createEvent = async () => {
-    const url = "http://localhost:3001/calendar/create";
-    const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(event),
-    });
+  const dispatch = useDispatch();
+  const { dateSelection } = useSelector((state: RootState) => state.modal);
 
-    console.log(response);
+  const [event, setEvent] = useState<{ title: string; start: Date }>({
+    title: "",
+    start: dateSelection,
+  });
+
+  const handleCreateEvent = async () => {
+    dispatch(createEvent(event) as any);
+    dispatch(updateModalStatus());
   };
 
   return (
@@ -36,13 +33,22 @@ const CalendarModal = () => {
         variant="filled"
         size="small"
         value={event.title}
-        onChange={(event: any) => {
-          const { value } = event.target;
+        onChange={(e: any) => {
+          const { value } = e.target;
           setEvent({ ...event, title: value });
         }}
       />
-      <DatePicker label="Basic date picker" />
-      <Button onClick={() => createEvent()}>Create new event</Button>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Basic date picker"
+          onChange={(e: any) => {
+            setEvent({ ...event, start: e.$d });
+          }}
+          defaultValue={dayjs(event.start)}
+        />
+      </LocalizationProvider>
+
+      <Button onClick={() => handleCreateEvent()}>Create new event</Button>
     </Container>
   );
 };

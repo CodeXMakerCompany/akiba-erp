@@ -1,13 +1,4 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import React from "react";
 import SaleModal from "./saleModal";

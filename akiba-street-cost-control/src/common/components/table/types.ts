@@ -7,12 +7,11 @@ export interface InterfaceHeader {
 export const categoryAttributes = ["id", "name", "created_at"];
 
 export const salesAttributes = [
-  "id",
-  "category",
-  "customer_email",
-  "sale_date",
-  "total_value",
-  "tracking_guide",
+  "customer",
+  "payment_method",
+  "total",
+  "net_earning",
+  "created_at",
 ];
 
 export const productAttributes = [
