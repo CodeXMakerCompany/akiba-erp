@@ -1,1 +1,43 @@
-{}
+{
+  "api": {
+    "akibaApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "akibaStreetApiLambda"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "akibaStreetApiLambda": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_akibaStreetApiLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "akibaStreetApiLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_akibaStreetApiLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "akibaStreetApiLambda"
+        }
+      ]
+    }
+  }
+}

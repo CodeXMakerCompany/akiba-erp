@@ -39,7 +39,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "amplify:akibaStreetApiLambda": "cd amplify/backend/function/akibaStreetApiLambda && tsc -p ./src/tsconfig.json && cd -"
   },
   "eslintConfig": {
     "extends": [

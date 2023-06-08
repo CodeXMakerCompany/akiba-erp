@@ -1,4 +1,28 @@
 {
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-akibastreetcostcontr-prod-95824-authRole",
+      "UnauthRoleArn": "arn:aws:iam::829055281972:role/amplify-akibastreetcostcontr-prod-95824-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::829055281972:role/amplify-akibastreetcostcontr-prod-95824-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-akibastreetcostcontr-prod-95824-deployment",
+      "UnauthRoleName": "amplify-akibastreetcostcontr-prod-95824-unauthRole",
+      "StackName": "amplify-akibastreetcostcontr-prod-95824",
+      "StackId": "arn:aws:cloudformation:us-east-2:829055281972:stack/amplify-akibastreetcostcontr-prod-95824/238f6ec0-054c-11ee-9ea7-0ab8631b87b7",
+      "AmplifyAppId": "dkj6i938qp9tr"
+    },
+    "categories": {
+      "function": {
+        "akibaStreetApiLambda": {
+          "deploymentBucketName": "amplify-akibastreetcostcontr-prod-95824-deployment",
+          "s3Key": "amplify-builds/akibaStreetApiLambda-55593637355355437343-build.zip"
+        }
+      },
+      "api": {
+        "akibaApi": {}
+      }
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-akibastreetcostcontr-dev-101131-authRole",

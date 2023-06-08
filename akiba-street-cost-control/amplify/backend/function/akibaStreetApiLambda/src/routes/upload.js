@@ -1,0 +1,10 @@
+"use strict";
+exports.__esModule = true;
+var express_1 = require("express");
+var multer_1 = require("multer");
+var upload_controller_1 = require("../controllers/upload.controller");
+var storage = multer_1["default"].memoryStorage();
+var upload = (0, multer_1["default"])({ storage: storage });
+var router = express_1["default"].Router();
+router.post("/", upload.single("image"), upload_controller_1["default"].uploadData);
+exports["default"] = router;
