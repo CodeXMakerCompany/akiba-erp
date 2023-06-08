@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 const url =
-  process.env.USER_BRANCH === "prod"
+  process.env.REACT_APP_ENV_ENVIRONMENT === "prod"
     ? "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod/api/"
-    : "http://localhost:3001";
+    : "http://localhost:3333";
 
 const apiInstance = (): AxiosInstance => {
   const config: AxiosRequestConfig = {

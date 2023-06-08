@@ -158,7 +158,7 @@
         "TemplateURL": "https://s3.amazonaws.com/amplify-akibastreetcostcontr-prod-95824-deployment/amplify-cfn-templates/function/akibaStreetApiLambda-cloudformation-template.json",
         "Parameters": {
           "deploymentBucketName": "amplify-akibastreetcostcontr-prod-95824-deployment",
-          "s3Key": "amplify-builds/akibaStreetApiLambda-55593637355355437343-build.zip",
+          "s3Key": "amplify-builds/akibaStreetApiLambda-674c4762376d2b724d36-build.zip",
           "env": "prod"
         }
       }

@@ -1,71 +1,42 @@
 "use strict";
 exports.__esModule = true;
-/*
-Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-    http://aws.amazon.com/apache2.0/
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and limitations under the License.
-*/
+var cors = require("cors");
 var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+var db_1 = require("./config/db");
+var category_1 = require("./routes/category");
+var sales_1 = require("./routes/sales");
+var upload_1 = require("./routes/upload");
+var product_1 = require("./routes/product");
+var events_1 = require("./routes/events");
+var dotenv = require("dotenv");
+require("dotenv/config");
+dotenv.config();
 // declare a new express app
 var app = express();
+var port = process.env.SERVER_PORT || 3000;
+// const router = express.Router();
+(0, db_1["default"])();
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(awsServerlessExpressMiddleware.eventContext());
 // Enable CORS for all methods
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
+    res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
     next();
 });
-/**********************
- * Example get method *
- **********************/
-app.get("/api", function (req, res) {
-    // Add your code here
-    res.json({ success: "get call succeed!", url: req.url });
-});
-app.get("/api/*", function (req, res) {
-    // Add your code here
-    res.json({ success: "get call succeed!", url: req.url });
-});
-/****************************
- * Example post method *
- ****************************/
-app.post("/api", function (req, res) {
-    // Add your code here
-    res.json({ success: "post call succeed!", url: req.url, body: req.body });
-});
-app.post("/api/*", function (req, res) {
-    // Add your code here
-    res.json({ success: "post call succeed!", url: req.url, body: req.body });
-});
-/****************************
- * Example put method *
- ****************************/
-app.put("/api", function (req, res) {
-    // Add your code here
-    res.json({ success: "put call succeed!", url: req.url, body: req.body });
-});
-app.put("/api/*", function (req, res) {
-    // Add your code here
-    res.json({ success: "put call succeed!", url: req.url, body: req.body });
-});
-/****************************
- * Example delete method *
- ****************************/
-app["delete"]("/api", function (req, res) {
-    // Add your code here
-    res.json({ success: "delete call succeed!", url: req.url });
-});
-app["delete"]("/api/*", function (req, res) {
-    // Add your code here
-    res.json({ success: "delete call succeed!", url: req.url });
-});
-app.listen(3000, function () {
-    console.log("App startedsss");
+app.use(cors({ origin: true }));
+app.use("/category", category_1["default"]);
+app.use("/sales", sales_1["default"]);
+app.use("/upload", upload_1["default"]);
+app.use("/product", product_1["default"]);
+app.use("/event", events_1["default"]);
+app.listen(port, function () {
+    console.log("App started", port);
 });
 // Export the app object. When executing the application locally, this does nothing. However,
 // to port it to AWS Lambda, we will create a wrapper that will load the app from this file

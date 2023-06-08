@@ -2,13 +2,13 @@ import * as cors from "cors";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as awsServerlessExpressMiddleware from "aws-serverless-express/middleware";
-import * as db from "./config/db";
+import db from "./config/db";
 
-import * as CategoryRoutes from "./routes/category";
-import * as SalesRoutes from "./routes/sales";
-import * as UploadRoutes from "./routes/upload";
-import * as ProductRoutes from "./routes/product";
-import * as EventRoutes from "./routes/events";
+import CategoryRoutes from "./routes/category";
+import SalesRoutes from "./routes/sales";
+import UploadRoutes from "./routes/upload";
+import ProductRoutes from "./routes/product";
+import EventRoutes from "./routes/events";
 
 import * as dotenv from "dotenv";
 import "dotenv/config";
@@ -45,8 +45,7 @@ app.use("/product", ProductRoutes);
 app.use("/event", EventRoutes);
 
 app.listen(port, () => {
-  console.log(process.env);
-  console.log("App started 2");
+  console.log("App started", port);
 });
 
 // Export the app object. When executing the application locally, this does nothing. However,
