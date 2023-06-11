@@ -18,6 +18,17 @@ import {
   categoryAttributes,
   productAttributes,
 } from "./types";
+import { Button } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { updateModalStatus } from "../../../redux/slices/modal/modal.slice";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
+
+type RowProps = {
+  row: any;
+  entity: string;
+  options: { dispatch: Dispatch<any> };
+};
 
 const generateRowtypesAndAttributes = (entity: string) => {
   let attributes: Array<any> = [];
@@ -51,10 +62,12 @@ const MediaRow = ({ media }: { media: string }) => (
     <img alt={media} src={media} width={100} />
   </React.Fragment>
 );
-function Row({ row, entity }: { row: any; entity: string }) {
+function Row({ row, entity, options: { dispatch } }: RowProps) {
   const [open, setOpen] = React.useState(false);
   const { rowTypes, attributes } = generateRowtypesAndAttributes(entity);
-
+  const handleEdit = () => {
+    dispatch(updateModalStatus({ id: row?._id, entity, mode: "Edit" }));
+  };
   return (
     <React.Fragment>
       <>
@@ -85,8 +98,16 @@ function Row({ row, entity }: { row: any; entity: string }) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  History
+                  Record Details
                 </Typography>
+                <Button
+                  variant="contained"
+                  endIcon={<Edit />}
+                  onClick={handleEdit}
+                >
+                  {" "}
+                  Edit{" "}
+                </Button>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
@@ -128,6 +149,9 @@ export const CollapsibleTable = ({
   data: Array<any>;
   entity: string;
 }) => {
+  const dispatch = useDispatch();
+  console.log(data);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -144,7 +168,12 @@ export const CollapsibleTable = ({
         </TableHead>
         <TableBody>
           {data.map((row) => (
-            <Row key={row.id} row={row} entity={entity} />
+            <Row
+              key={row.id}
+              row={row}
+              entity={entity}
+              options={{ dispatch }}
+            />
           ))}
         </TableBody>
       </Table>

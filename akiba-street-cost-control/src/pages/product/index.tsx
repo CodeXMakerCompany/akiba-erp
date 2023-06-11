@@ -12,8 +12,8 @@ import DynamicTable from "../../common/components/table";
 import { useLoaderData, useNavigation } from "react-router-dom";
 import ProductModal from "../../common/components/modal/index";
 import axios from "axios";
-import { localBaseUrl } from "../../constants/endpoints";
 import { ProductsState } from "../../redux/slices/products/products.slice";
+import { baseURL } from "../../api/api";
 const TableHeaders: Array<any> = [
   {
     label: "Image",
@@ -62,7 +62,6 @@ const ProductPage = () => {
   );
   const LoadedData: any = useLoaderData();
   const navigation = useNavigation();
-  console.log(LoadedData?.productResponse?.products);
 
   return (
     <Container>
@@ -96,10 +95,10 @@ const ProductPage = () => {
 };
 
 export const ProductsLoader = async () => {
-  const categoryUrl = `${localBaseUrl}/category/all`;
+  const categoryUrl = `${baseURL}/category/all`;
   const categoryResponse = await axios.get(categoryUrl);
 
-  const productsUrl = `${localBaseUrl}/product/all`;
+  const productsUrl = `${baseURL}/product/all`;
   const productsResponse = await axios.get(productsUrl);
 
   return {

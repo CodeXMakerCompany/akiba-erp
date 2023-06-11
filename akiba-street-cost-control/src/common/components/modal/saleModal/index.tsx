@@ -12,8 +12,9 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import useDebounce from "../../../../hooks/useDebounce";
 import apiInstance from "../../../../api/api";
 import { createSale, fetchSales } from "../../../../redux/slices/sales/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateModalStatus } from "../../../../redux/slices/modal/modal.slice";
+import { RootState } from "../../../../redux/store";
 const api = apiInstance();
 
 const paymentMethods = [
@@ -51,6 +52,10 @@ const CreateSale = () => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const debouncedProduct = useDebounce(searchValue, 500);
+  const {
+    modal: { mode },
+  } = useSelector((state: RootState) => state);
+
   const [salesForm, setSalesform] = useState<SalesForm>({
     user: "",
     products: [],
@@ -214,7 +219,7 @@ const CreateSale = () => {
       />
 
       <Button variant="contained" onClick={handleCreateSale}>
-        Create Sale
+        {mode} Sale
       </Button>
     </Container>
   );

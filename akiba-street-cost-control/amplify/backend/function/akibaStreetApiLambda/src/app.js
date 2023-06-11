@@ -15,7 +15,7 @@ require("dotenv/config");
 dotenv.config();
 // declare a new express app
 var app = express();
-var port = process.env.SERVER_PORT || 3000;
+var port = process.env.SERVER_PORT || 6666;
 // const router = express.Router();
 (0, db_1["default"])();
 app.use(express.urlencoded({ extended: true }));
@@ -30,11 +30,11 @@ app.use(function (req, res, next) {
     next();
 });
 app.use(cors({ origin: true }));
-app.use("/category", category_1["default"]);
-app.use("/sales", sales_1["default"]);
-app.use("/upload", upload_1["default"]);
-app.use("/product", product_1["default"]);
-app.use("/event", events_1["default"]);
+app.use("/api/category", category_1["default"]);
+app.use("/api/sales", sales_1["default"]);
+app.use("/api/upload", upload_1["default"]);
+app.use("/api/product", product_1["default"]);
+app.use("/api/event", events_1["default"]);
 app.listen(port, function () {
     console.log("App started", port);
 });

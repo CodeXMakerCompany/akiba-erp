@@ -12,6 +12,7 @@ import {
   ModalState,
   updateModalStatus,
 } from "../../redux/slices/modal/modal.slice";
+import { baseURL } from "../../api/api";
 
 const TableHeaders: Array<InterfaceHeader> = [
   {
@@ -75,7 +76,7 @@ const CategoriesPage = () => {
 };
 
 export const CategoriesLoader = async () => {
-  const url = "http://localhost:3001/category/all";
+  const url = `${baseURL}/category/all`;
   const response = await fetch(url);
   const data: any = response.json();
   return data;

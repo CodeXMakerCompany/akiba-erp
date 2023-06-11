@@ -15,7 +15,7 @@ import "dotenv/config";
 dotenv.config();
 // declare a new express app
 const app: express.Application = express();
-const port: number | string = process.env.SERVER_PORT || 3000;
+const port: number | string = process.env.SERVER_PORT || 6666;
 // const router = express.Router();
 
 db();
@@ -38,11 +38,11 @@ app.use((req, res, next) => {
 
 app.use(cors({ origin: true }));
 
-app.use("/category", CategoryRoutes);
-app.use("/sales", SalesRoutes);
-app.use("/upload", UploadRoutes);
-app.use("/product", ProductRoutes);
-app.use("/event", EventRoutes);
+app.use("/api/category", CategoryRoutes);
+app.use("/api/sales", SalesRoutes);
+app.use("/api/upload", UploadRoutes);
+app.use("/api/product", ProductRoutes);
+app.use("/api/event", EventRoutes);
 
 app.listen(port, () => {
   console.log("App started", port);

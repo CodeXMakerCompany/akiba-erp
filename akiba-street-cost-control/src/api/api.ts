@@ -1,13 +1,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
-const url =
+export const baseURL =
   process.env.REACT_APP_ENV_ENVIRONMENT === "prod"
-    ? "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod/api/"
-    : "http://localhost:3333";
+    ? "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod"
+    : "http://localhost:3001/api";
 
 const apiInstance = (): AxiosInstance => {
   const config: AxiosRequestConfig = {
-    baseURL: url,
+    baseURL,
     timeout: 5000,
     headers: {
       "Content-Type": "application/json",

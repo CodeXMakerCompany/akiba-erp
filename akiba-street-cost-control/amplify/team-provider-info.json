@@ -15,7 +15,7 @@
       "function": {
         "akibaStreetApiLambda": {
           "deploymentBucketName": "amplify-akibastreetcostcontr-prod-95824-deployment",
-          "s3Key": "amplify-builds/akibaStreetApiLambda-674c4762376d2b724d36-build.zip"
+          "s3Key": "amplify-builds/akibaStreetApiLambda-48514763657368314443-build.zip"
         }
       },
       "api": {
