@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,59 +47,67 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var event_1 = require("../models/event");
-var createEvent = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, start, newEvent, error_1;
+exports.login = void 0;
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcrypt");
+var user_1 = require("../../models/user");
+var login = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, username, password, foundUser, user, token, validatePassword, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                _a = req.body, title = _a.title, start = _a.start;
-                return [4 /*yield*/, event_1.default.create({
-                        name: title,
-                        created_at: start,
-                    })];
+                _a = req.body, username = _a.username, password = _a.password;
+                _b.label = 1;
             case 1:
-                newEvent = _b.sent();
-                return [2 /*return*/, res.status(200).send({
-                        status: "success",
-                        message: "Created Event",
-                        createdItem: newEvent,
-                    })];
+                _b.trys.push([1, 5, , 6]);
+                return [4 /*yield*/, user_1.default.findOne({ email: username })];
             case 2:
-                error_1 = _b.sent();
-                return [2 /*return*/, res.status(412).send({
-                        status: "error",
-                        message: "Error creating Event",
-                        error: error_1,
-                    })];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-var getEvents = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var results;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, event_1.default.find({})];
-            case 1:
-                results = _a.sent();
-                try {
+                foundUser = _b.sent();
+                if (!foundUser._id) return [3 /*break*/, 4];
+                user = __assign({}, foundUser._doc);
+                token = jwt.sign(user, "AKIBASHOP", {
+                    expiresIn: 60 * 60 * 24,
+                });
+                // Check for social login
+                if (password == null || password == undefined) {
                     return [2 /*return*/, res.status(200).send({
                             status: "success",
-                            model: "Events",
-                            events: results,
+                            message: "Login correct",
+                            user: user,
+                            token: token,
                         })];
                 }
-                catch (error) {
-                    return [2 /*return*/, res.status(412).send({
-                            status: "error",
-                            model: "Events",
-                            error: error,
+                return [4 /*yield*/, bcrypt.compareSync(password, user.password)];
+            case 3:
+                validatePassword = _b.sent();
+                if (validatePassword) {
+                    return [2 /*return*/, res.status(200).send({
+                            status: "success",
+                            message: "Login correct",
+                            user: user,
+                            token: token,
                         })];
                 }
-                return [2 /*return*/];
+                return [2 /*return*/, res.status(412).send({
+                        status: "error",
+                        model: "User",
+                        error: "User password doesn't match",
+                    })];
+            case 4: return [2 /*return*/, res.status(412).send({
+                    status: "error",
+                    model: "User",
+                    error: "User not found",
+                })];
+            case 5:
+                error_1 = _b.sent();
+                console.log(error_1);
+                return [2 /*return*/, res.status(412).send({
+                        status: "error",
+                        model: "User",
+                        error: error_1,
+                    })];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
-exports.default = { getEvents: getEvents, createEvent: createEvent };
+exports.login = login;

@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var category_1 = require("../models/category");
 var createCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var params, newCategory, error_1;
@@ -46,20 +46,20 @@ var createCategory = function (req, res, next) { return __awaiter(void 0, void 0
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, category_1["default"].create(params)];
+                return [4 /*yield*/, category_1.default.create(params)];
             case 2:
                 newCategory = _a.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Category",
-                        createdItem: newCategory
+                        createdItem: newCategory,
                     })];
             case 3:
                 error_1 = _a.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Category",
-                        error: error_1
+                        error: error_1,
                     })];
             case 4: return [2 /*return*/];
         }
@@ -71,23 +71,23 @@ var getCategories = function (req, res, next) { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, category_1["default"].find()];
+                return [4 /*yield*/, category_1.default.find()];
             case 1:
                 categories = _a.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Category",
-                        categories: categories
+                        categories: categories,
                     })];
             case 2:
                 error_2 = _a.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Category",
-                        error: error_2
+                        error: error_2,
                     })];
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports["default"] = { createCategory: createCategory, getCategories: getCategories };
+exports.default = { createCategory: createCategory, getCategories: getCategories };

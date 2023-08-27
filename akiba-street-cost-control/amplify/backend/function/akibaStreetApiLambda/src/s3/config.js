@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _a, _b;
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPublicS3Object = exports.getS3ObjectSigned = exports.uploadToS3 = void 0;
 var client_s3_1 = require("@aws-sdk/client-s3");
 var s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
@@ -47,8 +47,8 @@ var s3 = new client_s3_1.S3Client({
     region: "us-east-1",
     credentials: {
         accessKeyId: accessKeyId,
-        secretAccessKey: secretAccessKey
-    }
+        secretAccessKey: secretAccessKey,
+    },
 });
 var Bucket = process.env.BUCKET;
 var uploadToS3 = function (_a) {
@@ -64,7 +64,7 @@ var uploadToS3 = function (_a) {
                         Key: key,
                         ACL: "public-read",
                         Body: file.buffer,
-                        ContentType: file.mimetype
+                        ContentType: file.mimetype,
                     });
                     _b.label = 1;
                 case 1:
@@ -90,7 +90,7 @@ var getS3ObjectSigned = function (key) { return __awaiter(void 0, void 0, void 0
             case 0:
                 command = new client_s3_1.GetObjectCommand({
                     Bucket: process.env.BUCKET,
-                    Key: key
+                    Key: key,
                 });
                 _a.label = 1;
             case 1:

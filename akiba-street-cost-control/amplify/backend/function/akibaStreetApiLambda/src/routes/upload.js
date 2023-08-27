@@ -1,10 +1,10 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var multer = require("multer");
 var upload_controller_1 = require("../controllers/upload.controller");
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 var router = express.Router();
-router.post("/", upload.single("image"), upload_controller_1["default"].uploadData);
-exports["default"] = router;
+router.post("/", upload.single("image"), upload_controller_1.default.uploadData);
+exports.default = router;

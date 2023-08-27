@@ -1,27 +1,21 @@
 "use strict";
-// import { model, Schema, Model, Document } from "mongoose";
-exports.__esModule = true;
-// interface IUser extends Document {
-//   email: string;
-//   firstName: string;
-//   lastName: string;
-//   nickname: string;
-// }
-// const linksSchema: Schema = new Schema({
-//   name: { type: String, required: true },
-//   link: { type: String, required: true },
-// });
-// const followersSchema: Schema = new Schema({
-//   username: { type: String, required: true },
-//   email: { type: String, required: true },
-// });
-// const UserSchema: Schema = new Schema({
-//   email: { type: String, required: true },
-//   firstName: { type: String, required: true },
-//   lastName: { type: String, required: true },
-//   avatarImg: { type: String, required: true },
-//   links: [linksSchema],
-//   createdAd: { type: Date, default: new Date() },
-// });
-// export const User: Model<IUser> = model("User", UserSchema);
-exports["default"] = "testing";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = require("mongoose");
+var mongoose_paginate_ts_1 = require("mongoose-paginate-ts");
+var schema = new mongoose_1.Schema({
+    name: { type: String, trim: true },
+    surnames: { type: String, trim: true },
+    email: { type: String, trim: true },
+    password: { type: String, trim: true },
+    phone: { type: String, trim: true },
+    address: { type: Object },
+    rol: { type: String, trim: true },
+    description: { type: String, trim: true },
+    status: Number,
+    avatar: { type: String, trim: true },
+    updated_at: { type: Date, default: Date.now() },
+    created_at: { type: Date, default: new Date() },
+});
+schema.plugin(mongoose_paginate_ts_1.mongoosePagination);
+var userSchema = mongoose_1.default.model("User", schema);
+exports.default = userSchema;

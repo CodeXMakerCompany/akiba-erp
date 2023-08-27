@@ -36,24 +36,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var logger_1 = require("../../utils/logger");
-exports.default = (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, error_1;
+exports.scrappeShadowverseCards = void 0;
+var axios_1 = require("axios");
+var card_1 = require("../../models/card");
+var category_1 = require("../../models/category");
+var scrappeShadowverseCards = function (setname) { return __awaiter(void 0, void 0, void 0, function () {
+    var cardList, tcgName, category, data;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, mongoose_1.connect)("mongodb+srv://codexmaker:".concat(process.env.DB_PASS, "@cluster0.wyr6c0u.mongodb.net/").concat(process.env.DB_NAME, "?retryWrites=true&w=majority"))];
+                cardList = [];
+                tcgName = "Shadowverse";
+                return [4 /*yield*/, category_1.default.findOne({
+                        name: tcgName,
+                    })];
             case 1:
-                connection = _a.sent();
-                (0, logger_1.default)("success", "Connected to database successfully");
-                return [3 /*break*/, 3];
+                category = _a.sent();
+                return [4 /*yield*/, axios_1.default.get("https://shadowcard.io/api/search.php?database&pack=".concat(setname, "&sort=name&limit=250&offset=0"))];
             case 2:
-                error_1 = _a.sent();
-                console.error("An error ocurred:", error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                data = (_a.sent()).data;
+                data.card.forEach(function (element, idx) {
+                    element.card_no = data.card[idx].id;
+                    element.category_id = category._id;
+                    element.tcg = tcgName;
+                    element.set_name = setname;
+                    element.card_type = data.card[idx].type;
+                    element.description = data.card[idx].ability;
+                    element.content = data.card[idx].stats;
+                    element.fllabor_text = data.card[idx].trait;
+                    element.flg = data.card[idx].class;
+                    element.image = "https://images.shadowcard.io/images/cards/".concat(element.id, ".jpg");
+                    cardList.push(element);
+                });
+                return [4 /*yield*/, card_1.default.bulkWrite(cardList.map(function (card) { return ({
+                        updateOne: {
+                            filter: { card_no: card.card_no },
+                            update: { $set: card },
+                            upsert: true,
+                        },
+                    }); }))];
+            case 3: return [2 /*return*/, _a.sent()];
         }
     });
-}); });
+}); };
+exports.scrappeShadowverseCards = scrappeShadowverseCards;

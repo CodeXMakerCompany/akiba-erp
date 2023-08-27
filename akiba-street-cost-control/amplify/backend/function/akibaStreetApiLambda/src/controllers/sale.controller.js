@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var sale_1 = require("../models/sale");
 var createSale = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, products, total, paymentMethod, user, productInvestment, realTotal, newSale, error_1;
@@ -50,26 +50,26 @@ var createSale = function (req, res, next) { return __awaiter(void 0, void 0, vo
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, sale_1["default"].create({
+                return [4 /*yield*/, sale_1.default.create({
                         products: products,
                         total: total,
                         net_earning: realTotal,
                         customer: user,
-                        payment_method: paymentMethod
+                        payment_method: paymentMethod,
                     })];
             case 2:
                 newSale = _b.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         message: "Created Sale",
-                        createdItem: newSale
+                        createdItem: newSale,
                     })];
             case 3:
                 error_1 = _b.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         message: "Error creating Sale",
-                        error: error_1
+                        error: error_1,
                     })];
             case 4: return [2 /*return*/];
         }
@@ -85,11 +85,11 @@ var getSales = function (req, res, next) { return __awaiter(void 0, void 0, void
                     page: page,
                     limit: limit,
                     collation: {
-                        locale: "en"
+                        locale: "en",
                     },
-                    sort: { created_at: -1 }
+                    sort: { created_at: -1 },
                 };
-                return [4 /*yield*/, sale_1["default"].paginate(options)];
+                return [4 /*yield*/, sale_1.default.paginate(options)];
             case 1:
                 results = _b.sent();
                 try {
@@ -99,18 +99,18 @@ var getSales = function (req, res, next) { return __awaiter(void 0, void 0, void
                             sales: results === null || results === void 0 ? void 0 : results.docs,
                             totalDocs: results === null || results === void 0 ? void 0 : results.totalDocs,
                             totalPages: results === null || results === void 0 ? void 0 : results.totalPages,
-                            page: results === null || results === void 0 ? void 0 : results.page
+                            page: results === null || results === void 0 ? void 0 : results.page,
                         })];
                 }
                 catch (error) {
                     return [2 /*return*/, res.status(412).send({
                             status: "error",
                             model: "Category",
-                            error: error
+                            error: error,
                         })];
                 }
                 return [2 /*return*/];
         }
     });
 }); };
-exports["default"] = { getSales: getSales, createSale: createSale };
+exports.default = { getSales: getSales, createSale: createSale };

@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express = require("express");
+var tcg_controller_1 = require("../controllers/tcg.controller");
+var router = express.Router();
+router.get("/get-rarities/:tcg", tcg_controller_1.default.getRariritiesByTCG);
+router.post("/update-wixoss-cards", tcg_controller_1.default.updateWixossCards);
+router.post("/scrappe-wixoss-rarities", tcg_controller_1.default.updateWixossRarities);
+router.post("/scrappe-shadowverse-rarities", tcg_controller_1.default.updateShadowverseRarities);
+router.post("/update-shadowverse-cards", tcg_controller_1.default.updateShadowverseCards);
+router.get("/get-cards/:page/:size/:team?/:rarity?/:selectedClass?/:types?/:tcg?", tcg_controller_1.default.getCards);
+router.put("/update-price-cards/:rarity/:buyPrice/:sellPrice/:category/:stock", tcg_controller_1.default.updateCardsPrices);
+router.put("/update-tcg-card", tcg_controller_1.default.updateSingleCard);
+exports.default = router;

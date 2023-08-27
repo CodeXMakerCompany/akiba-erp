@@ -36,24 +36,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var logger_1 = require("../../utils/logger");
-exports.default = (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, error_1;
+exports.scrappeWixossCards = void 0;
+var axios_1 = require("axios");
+var delay_1 = require("../../utils/delay");
+var card_1 = require("../../models/card");
+var category_1 = require("../../models/category");
+var scrappeWixossCards = function (endpoint) { return __awaiter(void 0, void 0, void 0, function () {
+    var cardList, wixossCategory, data, pages, i, newUrl, items;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, mongoose_1.connect)("mongodb+srv://codexmaker:".concat(process.env.DB_PASS, "@cluster0.wyr6c0u.mongodb.net/").concat(process.env.DB_NAME, "?retryWrites=true&w=majority"))];
+                cardList = [];
+                return [4 /*yield*/, category_1.default.findOne({
+                        name: "wixoss",
+                    })];
             case 1:
-                connection = _a.sent();
-                (0, logger_1.default)("success", "Connected to database successfully");
-                return [3 /*break*/, 3];
+                wixossCategory = _a.sent();
+                return [4 /*yield*/, axios_1.default.get(endpoint)];
             case 2:
-                error_1 = _a.sent();
-                console.error("An error ocurred:", error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
+                data = (_a.sent()).data;
+                pages = data.count / data.items.length;
+                i = 0;
+                _a.label = 3;
+            case 3:
+                if (!(i < Math.round(pages))) return [3 /*break*/, 7];
+                newUrl = endpoint.replace("p=0", "p=".concat(i));
+                return [4 /*yield*/, axios_1.default.get(newUrl)];
+            case 4:
+                items = (_a.sent()).data.items;
+                items.forEach(function (element) {
+                    element.category_id = wixossCategory._id;
+                    element.tcg = "wixoss";
+                    element.image = "https://www.takaratomy.co.jp/products/en.wixoss/card/thumb/".concat(element.card_no, ".jpg");
+                    cardList.push(element);
+                });
+                return [4 /*yield*/, (0, delay_1.delay)(2000)];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6:
+                i++;
                 return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+            case 7: return [4 /*yield*/, card_1.default.bulkWrite(cardList.map(function (card) { return ({
+                    updateOne: {
+                        filter: { card_no: card.card_no },
+                        update: { $set: card },
+                        upsert: true,
+                    },
+                }); }))];
+            case 8: return [2 /*return*/, _a.sent()];
         }
     });
-}); });
+}); };
+exports.scrappeWixossCards = scrappeWixossCards;

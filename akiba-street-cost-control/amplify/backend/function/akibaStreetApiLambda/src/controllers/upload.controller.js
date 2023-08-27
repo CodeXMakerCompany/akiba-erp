@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var config_1 = require("../s3/config");
 var uploadData = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var file, _a, error, key, image, warn_1;
@@ -56,7 +56,7 @@ var uploadData = function (req, res, next) { return __awaiter(void 0, void 0, vo
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Upload succesfully",
-                        image: image
+                        image: image,
                     })];
             case 4:
                 console.log(error);
@@ -66,10 +66,10 @@ var uploadData = function (req, res, next) { return __awaiter(void 0, void 0, vo
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Upload error",
-                        error: warn_1
+                        error: warn_1,
                     })];
             case 6: return [2 /*return*/];
         }
     });
 }); };
-exports["default"] = { uploadData: uploadData };
+exports.default = { uploadData: uploadData };

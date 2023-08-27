@@ -1,31 +1,51 @@
-// import { model, Schema, Model, Document } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-// interface IUser extends Document {
-//   email: string;
-//   firstName: string;
-//   lastName: string;
-//   nickname: string;
-// }
+import { mongoosePagination, Pagination } from "mongoose-paginate-ts";
 
-// const linksSchema: Schema = new Schema({
-//   name: { type: String, required: true },
-//   link: { type: String, required: true },
-// });
+export interface IUserAddress {
+  country: string;
+  city: string;
+  postalCode: string;
+  street: string;
+  notes: string;
+}
+export interface IUser {
+  name: String;
+  surnames: String;
+  email: String;
+  password: String;
+  phone: String;
+  address: IUserAddress;
+  rol: String;
+  description: String;
+  status: Number;
+  avatar: String;
+  created_at: String;
+  updated_at: String;
+}
 
-// const followersSchema: Schema = new Schema({
-//   username: { type: String, required: true },
-//   email: { type: String, required: true },
-// });
+export interface IUserModel extends IUser, Document {}
 
-// const UserSchema: Schema = new Schema({
-//   email: { type: String, required: true },
-//   firstName: { type: String, required: true },
-//   lastName: { type: String, required: true },
-//   avatarImg: { type: String, required: true },
-//   links: [linksSchema],
-//   createdAd: { type: Date, default: new Date() },
-// });
+const schema = new Schema({
+  name: { type: String, trim: true },
+  surnames: { type: String, trim: true },
+  email: { type: String, trim: true },
+  password: { type: String, trim: true },
+  phone: { type: String, trim: true },
+  address: { type: Object },
+  rol: { type: String, trim: true },
+  description: { type: String, trim: true },
+  status: Number,
+  avatar: { type: String, trim: true },
+  updated_at: { type: Date, default: Date.now() },
+  created_at: { type: Date, default: new Date() },
+});
 
-// export const User: Model<IUser> = model("User", UserSchema);
+schema.plugin(mongoosePagination);
 
-export default "testing";
+const userSchema: Pagination<IUserModel> = mongoose.model<
+  IUserModel,
+  Pagination<any>
+>("User", schema);
+
+export default userSchema;

@@ -36,24 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var logger_1 = require("../../utils/logger");
-exports.default = (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+exports.register = void 0;
+var bcrypt = require("bcrypt");
+var user_1 = require("../../models/user");
+var register = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, rol, hashedPass, targetUser, createdUser, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, mongoose_1.connect)("mongodb+srv://codexmaker:".concat(process.env.DB_PASS, "@cluster0.wyr6c0u.mongodb.net/").concat(process.env.DB_NAME, "?retryWrites=true&w=majority"))];
+                _a = req.body, email = _a.email, password = _a.password, rol = _a.rol;
+                _b.label = 1;
             case 1:
-                connection = _a.sent();
-                (0, logger_1.default)("success", "Connected to database successfully");
-                return [3 /*break*/, 3];
+                _b.trys.push([1, 5, , 6]);
+                return [4 /*yield*/, bcrypt.hashSync(password, 10)];
             case 2:
-                error_1 = _a.sent();
-                console.error("An error ocurred:", error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                hashedPass = _b.sent();
+                return [4 /*yield*/, user_1.default.find({ email: email })];
+            case 3:
+                targetUser = _b.sent();
+                if (targetUser.length) {
+                    return [2 /*return*/, res.status(412).send({
+                            status: "error",
+                            message: "Email already registered in the system",
+                        })];
+                }
+                return [4 /*yield*/, user_1.default.create({ email: email, password: hashedPass, rol: rol })];
+            case 4:
+                createdUser = _b.sent();
+                return [2 /*return*/, res.status(200).send({
+                        status: "success",
+                        model: "User",
+                        user: createdUser,
+                    })];
+            case 5:
+                error_1 = _b.sent();
+                console.log(error_1);
+                return [2 /*return*/, res.status(412).send({
+                        status: "error",
+                        model: "User",
+                        error: error_1,
+                    })];
+            case 6: return [2 /*return*/];
         }
     });
-}); });
+}); };
+exports.register = register;

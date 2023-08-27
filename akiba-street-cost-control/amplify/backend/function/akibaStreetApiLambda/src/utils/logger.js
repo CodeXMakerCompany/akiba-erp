@@ -1,6 +1,6 @@
 "use strict";
-exports.__esModule = true;
-exports["default"] = (function (status, message) {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = (function (status, message) {
     switch (status) {
         case "success":
             console.log("\x1b[34m", message);

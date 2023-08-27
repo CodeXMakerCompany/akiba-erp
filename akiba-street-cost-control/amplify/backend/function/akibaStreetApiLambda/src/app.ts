@@ -4,11 +4,14 @@ import * as bodyParser from "body-parser";
 import * as awsServerlessExpressMiddleware from "aws-serverless-express/middleware";
 import db from "./config/db";
 
+import UserRoutes from "./routes/user";
 import CategoryRoutes from "./routes/category";
 import SalesRoutes from "./routes/sales";
 import UploadRoutes from "./routes/upload";
 import ProductRoutes from "./routes/product";
 import EventRoutes from "./routes/events";
+import TcgRoutes from "./routes/tcg";
+import CartRoutes from "./routes/cart";
 
 import * as dotenv from "dotenv";
 import "dotenv/config";
@@ -38,11 +41,14 @@ app.use((req, res, next) => {
 
 app.use(cors({ origin: true }));
 
+app.use("/api/user", UserRoutes);
 app.use("/api/category", CategoryRoutes);
 app.use("/api/sales", SalesRoutes);
 app.use("/api/upload", UploadRoutes);
 app.use("/api/product", ProductRoutes);
 app.use("/api/event", EventRoutes);
+app.use("/api/tcg", TcgRoutes);
+app.use("/api/cart", CartRoutes);
 
 app.listen(port, () => {
   console.log("App started", port);

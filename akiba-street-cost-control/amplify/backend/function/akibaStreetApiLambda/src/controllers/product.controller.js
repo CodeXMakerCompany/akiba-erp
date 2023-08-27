@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var product_1 = require("../models/product");
 var createProduct = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var params, newProduct, error_1;
@@ -46,20 +46,20 @@ var createProduct = function (req, res, next) { return __awaiter(void 0, void 0,
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, product_1["default"].create(params)];
+                return [4 /*yield*/, product_1.default.create(params)];
             case 2:
                 newProduct = _a.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Product",
-                        createdItem: newProduct
+                        createdItem: newProduct,
                     })];
             case 3:
                 error_1 = _a.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Product",
-                        error: error_1
+                        error: error_1,
                     })];
             case 4: return [2 /*return*/];
         }
@@ -71,20 +71,20 @@ var getProducts = function (req, res, next) { return __awaiter(void 0, void 0, v
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, product_1["default"].find()];
+                return [4 /*yield*/, product_1.default.find()];
             case 1:
                 products = _a.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Product",
-                        products: products
+                        products: products,
                     })];
             case 2:
                 error_2 = _a.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Product",
-                        error: error_2
+                        error: error_2,
                     })];
             case 3: return [2 /*return*/];
         }
@@ -99,25 +99,25 @@ var getProductsByKeyword = function (req, res, next) { return __awaiter(void 0, 
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, product_1["default"].find({
-                        name: { $regex: keyWord, $options: "i" }
+                return [4 /*yield*/, product_1.default.find({
+                        name: { $regex: keyWord, $options: "i" },
                     })];
             case 2:
                 products = _a.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Product",
-                        products: products
+                        products: products,
                     })];
             case 3:
                 error_3 = _a.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Product",
-                        error: error_3
+                        error: error_3,
                     })];
             case 4: return [2 /*return*/];
         }
     });
 }); };
-exports["default"] = { createProduct: createProduct, getProducts: getProducts, getProductsByKeyword: getProductsByKeyword };
+exports.default = { createProduct: createProduct, getProducts: getProducts, getProductsByKeyword: getProductsByKeyword };

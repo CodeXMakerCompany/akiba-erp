@@ -1,15 +1,18 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var cors = require("cors");
 var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 var db_1 = require("./config/db");
+var user_1 = require("./routes/user");
 var category_1 = require("./routes/category");
 var sales_1 = require("./routes/sales");
 var upload_1 = require("./routes/upload");
 var product_1 = require("./routes/product");
 var events_1 = require("./routes/events");
+var tcg_1 = require("./routes/tcg");
+var cart_1 = require("./routes/cart");
 var dotenv = require("dotenv");
 require("dotenv/config");
 dotenv.config();
@@ -17,7 +20,7 @@ dotenv.config();
 var app = express();
 var port = process.env.SERVER_PORT || 6666;
 // const router = express.Router();
-(0, db_1["default"])();
+(0, db_1.default)();
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(awsServerlessExpressMiddleware.eventContext());
@@ -30,14 +33,17 @@ app.use(function (req, res, next) {
     next();
 });
 app.use(cors({ origin: true }));
-app.use("/api/category", category_1["default"]);
-app.use("/api/sales", sales_1["default"]);
-app.use("/api/upload", upload_1["default"]);
-app.use("/api/product", product_1["default"]);
-app.use("/api/event", events_1["default"]);
+app.use("/api/user", user_1.default);
+app.use("/api/category", category_1.default);
+app.use("/api/sales", sales_1.default);
+app.use("/api/upload", upload_1.default);
+app.use("/api/product", product_1.default);
+app.use("/api/event", events_1.default);
+app.use("/api/tcg", tcg_1.default);
+app.use("/api/cart", cart_1.default);
 app.listen(port, function () {
     console.log("App started", port);
 });
 // Export the app object. When executing the application locally, this does nothing. However,
 // to port it to AWS Lambda, we will create a wrapper that will load the app from this file
-exports["default"] = app;
+exports.default = app;

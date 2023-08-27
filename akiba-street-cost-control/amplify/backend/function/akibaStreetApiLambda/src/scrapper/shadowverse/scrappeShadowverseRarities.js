@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,24 +47,42 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var logger_1 = require("../../utils/logger");
-exports.default = (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, error_1;
+exports.scrappeShadowverseRarities = void 0;
+var axios_1 = require("axios");
+var cheerio = require("cheerio");
+var rarities_1 = require("../../models/rarities");
+var category_1 = require("../../models/category");
+var scrappeShadowverseRarities = function (endpoint) { return __awaiter(void 0, void 0, void 0, function () {
+    var shadowverseCategory, data, $, optionElements, values;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, mongoose_1.connect)("mongodb+srv://codexmaker:".concat(process.env.DB_PASS, "@cluster0.wyr6c0u.mongodb.net/").concat(process.env.DB_NAME, "?retryWrites=true&w=majority"))];
+            case 0: return [4 /*yield*/, category_1.default.findOne({
+                    name: "Shadowverse",
+                })];
             case 1:
-                connection = _a.sent();
-                (0, logger_1.default)("success", "Connected to database successfully");
-                return [3 /*break*/, 3];
+                shadowverseCategory = _a.sent();
+                return [4 /*yield*/, axios_1.default.get(endpoint)];
             case 2:
-                error_1 = _a.sent();
-                console.error("An error ocurred:", error_1 === null || error_1 === void 0 ? void 0 : error_1.message);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                data = (_a.sent()).data;
+                $ = cheerio.load(data);
+                optionElements = $("option");
+                values = [];
+                optionElements.each(function (index, element) {
+                    var value = $(element).attr("value");
+                    if (value !== undefined) {
+                        values.push({ name: value });
+                    }
+                });
+                console.log(shadowverseCategory._id);
+                return [4 /*yield*/, rarities_1.default.bulkWrite(values.map(function (item) { return ({
+                        updateOne: {
+                            filter: { name: item.name },
+                            update: { $set: __assign(__assign({}, item), { categoryId: shadowverseCategory._id }) },
+                            upsert: true,
+                        },
+                    }); }))];
+            case 3: return [2 /*return*/, _a.sent()];
         }
     });
-}); });
+}); };
+exports.scrappeShadowverseRarities = scrappeShadowverseRarities;
