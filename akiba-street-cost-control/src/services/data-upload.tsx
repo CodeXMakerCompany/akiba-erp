@@ -7,7 +7,8 @@ const validFileTypes: string[] = [
 ];
 
 const uploadData = async (data: any) => {
-  const url = "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod/api";
+  const url =
+    "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod/api/upload";
 
   const {
     data: { image },
