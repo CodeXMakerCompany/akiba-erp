@@ -7,7 +7,7 @@ const validFileTypes: string[] = [
 ];
 
 const uploadData = async (data: any) => {
-  const url = "http://localhost:3001/upload";
+  const url = "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod/api";
 
   const {
     data: { image },
