@@ -19,10 +19,10 @@ import {
 } from "../../../../redux/slices/modal/modal.slice";
 import { singleFileUpload } from "../../../../services/data-upload";
 import "../styles.css";
-import { localBaseUrl } from "../../../../constants/endpoints";
 import axios from "axios";
 import { getAllProducts } from "../../../../redux/slices/products/products.slice";
 import { AppDispatch } from "../../../../redux/store";
+import { baseURL } from "../../../../api/api";
 
 const ProductSale = () => {
   const [productForm, setProductForm] = useState({
@@ -40,7 +40,7 @@ const ProductSale = () => {
   } = useSelector((state: { upload: UploadState; modal: ModalState }) => state);
 
   const handleCreateProduct = async () => {
-    const url = `${localBaseUrl}/product/create`;
+    const url = `${baseURL}/product/create`;
     await axios.post(url, productForm);
     await dispatch(getAllProducts());
     dispatch(updateModalStatus());
