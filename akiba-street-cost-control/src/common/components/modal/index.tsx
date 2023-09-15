@@ -7,6 +7,7 @@ import ProductModal from "./productModal";
 import CalendarModal from "./calendarModal";
 import { updateModalStatus } from "../../../redux/slices/modal/modal.slice";
 import { useDispatch } from "react-redux";
+import { setActiveProduct } from "../../../redux/slices/products/products.slice";
 
 interface ModalProps {
   type: string;
@@ -28,7 +29,10 @@ const style = {
 
 const GlobalModal = ({ type, mode, isOpen }: ModalProps) => {
   const dispatch = useDispatch();
-  const handleClose = () => dispatch(updateModalStatus());
+  const handleClose = () => {
+    dispatch(updateModalStatus());
+    dispatch(setActiveProduct(undefined));
+  };
   return (
     <Modal
       open={isOpen}

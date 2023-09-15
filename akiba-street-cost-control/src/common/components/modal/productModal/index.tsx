@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import {
+  Box,
   Button,
   Container,
   FormControl,
@@ -7,26 +9,34 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setMediaPreview,
   UploadState,
 } from "../../../../redux/slices/uploads/uploads.slice";
-import {
-  ModalState,
-  updateModalStatus,
-} from "../../../../redux/slices/modal/modal.slice";
+
 import { singleFileUpload } from "../../../../services/data-upload";
 import "../styles.css";
-import axios from "axios";
-import { getAllProducts } from "../../../../redux/slices/products/products.slice";
-import { AppDispatch } from "../../../../redux/store";
-import { baseURL } from "../../../../api/api";
+
+import { AppDispatch, RootState } from "../../../../redux/store";
+
+import { TCGSubcategories } from "../../../../constants/subcategories";
+import {
+  ProductPayloadProps,
+  createProduct,
+} from "../../../../redux/slices/products/actions/createProduct";
+import { updateProduct } from "../../../../redux/slices/products/actions/updateProduct";
 
 const ProductSale = () => {
-  const [productForm, setProductForm] = useState({
+  const {
+    upload: { mediaPreview },
+    modal: { categories },
+    product: { activeProduct },
+  } = useSelector((state: RootState) => state);
+
+  const [productForm, setProductForm] = useState<ProductPayloadProps>({
     category: "63c859ee13e30d984af3fb2e",
+    subcategory: "",
     image: "",
     stock: 0,
     name: "",
@@ -34,17 +44,25 @@ const ProductSale = () => {
     purchasePrice: 0,
   });
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    upload: { mediaPreview },
-    modal: { categories },
-  } = useSelector((state: { upload: UploadState; modal: ModalState }) => state);
 
-  const handleCreateProduct = async () => {
-    const url = `${baseURL}/product/create`;
-    await axios.post(url, productForm);
-    await dispatch(getAllProducts());
-    dispatch(updateModalStatus());
+  const handleSubmit = async () => {
+    if (activeProduct?._id) {
+      return await dispatch(updateProduct(productForm));
+    }
+
+    return await dispatch(createProduct(productForm));
   };
+
+  useEffect(() => {
+    const { category, ...restOfProduct }: any = { ...activeProduct };
+    if (activeProduct) {
+      setProductForm({
+        ...productForm,
+        ...restOfProduct,
+        category: category._id,
+      });
+    }
+  }, [activeProduct]);
 
   return (
     <Container>
@@ -67,15 +85,44 @@ const ProductSale = () => {
             : null}
         </Select>
       </FormControl>
+      <br />
+      {["63c85a8813e30d984af3fb3a", "63c85a8d13e30d984af3fb3c"].includes(
+        productForm.category
+      ) ? (
+        <Box mt={4}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              Tcg Sub-Category
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={productForm.subcategory}
+              label="Select a sub-category"
+              onChange={({ target }) =>
+                setProductForm({ ...productForm, subcategory: target.value })
+              }
+            >
+              {TCGSubcategories?.length
+                ? TCGSubcategories.map((subcategory: string) => (
+                    <MenuItem value={subcategory}>{subcategory}</MenuItem>
+                  ))
+                : null}
+            </Select>
+          </FormControl>
+        </Box>
+      ) : null}
+
       <FormControl fullWidth>
         <TextField
           hiddenLabel
-          id="field-total"
+          id="name"
           defaultValue=""
           variant="filled"
           size="small"
           placeholder="Name"
           className="custom-modal-form-field"
+          value={productForm.name}
           onChange={({ target }) =>
             setProductForm({ ...productForm, name: target.value })
           }
@@ -87,6 +134,7 @@ const ProductSale = () => {
           type="number"
           placeholder="Stock"
           className="custom-modal-form-field"
+          value={productForm.stock}
           onChange={({ target }) =>
             setProductForm({ ...productForm, stock: parseFloat(target.value) })
           }
@@ -99,6 +147,7 @@ const ProductSale = () => {
           type="number"
           placeholder="Purchase price"
           className="custom-modal-form-field"
+          value={productForm.purchasePrice}
           onChange={({ target }) =>
             setProductForm({
               ...productForm,
@@ -114,6 +163,7 @@ const ProductSale = () => {
           type="number"
           placeholder="Sell price"
           className="custom-modal-form-field"
+          value={productForm.customerPrice}
           onChange={({ target }) =>
             setProductForm({
               ...productForm,
@@ -122,7 +172,7 @@ const ProductSale = () => {
           }
         />
       </FormControl>
-      <div>
+      <Box mb={4}>
         <Button variant="contained" component="label">
           Base Image
           <input
@@ -142,16 +192,20 @@ const ProductSale = () => {
             }
           />
         </Button>
-      </div>
+      </Box>
       <div>
-        {mediaPreview && (
-          <img alt="uploaded-product" width={200} src={mediaPreview} />
+        {(mediaPreview || activeProduct?.image) && (
+          <img
+            alt="uploaded-product"
+            width={200}
+            src={mediaPreview || activeProduct?.image}
+          />
         )}
       </div>
       <div>
         <Button variant="contained" component="label">
-          Create Product
-          <input hidden onClick={handleCreateProduct} />
+          {activeProduct?._id ? "Update" : "Create"} Product
+          <input hidden onClick={handleSubmit} />
         </Button>
       </div>
     </Container>

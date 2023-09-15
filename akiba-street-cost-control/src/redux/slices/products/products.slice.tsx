@@ -1,27 +1,22 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { localBaseUrl } from "../../../constants/endpoints";
-import axios from "axios";
+
+import { getAllProducts } from "./actions/getAllProducts";
+import { removeProduct } from "./actions/removeProduct";
+import { ProductPayloadProps, createProduct } from "./actions/createProduct";
+import { updateProduct } from "./actions/updateProduct";
 
 export interface ProductsState {
   products: string[];
+  activeProduct?: ProductPayloadProps;
   error: unknown;
 }
 
 const initialState: ProductsState = {
   products: [],
+  activeProduct: undefined,
   error: null,
 };
-
-export const getAllProducts = createAsyncThunk("product/all", async () => {
-  const productsUrl = `${localBaseUrl}/product/all`;
-  try {
-    const productsResponse = await axios.get(productsUrl);
-    return productsResponse.data.products;
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
-});
 
 export const productsSlice = createSlice({
   name: "product",
@@ -29,6 +24,12 @@ export const productsSlice = createSlice({
   reducers: {
     setProducts: (state, { payload }: PayloadAction<string[]>) => {
       state.products = payload;
+    },
+    setActiveProduct: (
+      state,
+      { payload }: PayloadAction<ProductPayloadProps | undefined>
+    ) => {
+      state.activeProduct = payload;
     },
   },
   extraReducers: (builder) => {
@@ -43,10 +44,43 @@ export const productsSlice = createSlice({
         state.error = action.error;
       }
     });
+    builder.addCase(createProduct.fulfilled, (state, { payload }) => {
+      console.log(payload);
+    });
+    builder.addCase(createProduct.rejected, (state, action) => {
+      if (action.payload) {
+        // Since we passed in `MyKnownError` to `rejectValue` in `updateUser`, the type information will be available here.
+        state.error = action.payload;
+      } else {
+        state.error = action.error;
+      }
+    });
+    builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
+      console.log(payload);
+    });
+    builder.addCase(updateProduct.rejected, (state, action) => {
+      if (action.payload) {
+        // Since we passed in `MyKnownError` to `rejectValue` in `updateUser`, the type information will be available here.
+        state.error = action.payload;
+      } else {
+        state.error = action.error;
+      }
+    });
+    builder.addCase(removeProduct.fulfilled, (state, { payload }) => {
+      console.log(payload);
+    });
+    builder.addCase(removeProduct.rejected, (state, action) => {
+      if (action.payload) {
+        // Since we passed in `MyKnownError` to `rejectValue` in `updateUser`, the type information will be available here.
+        state.error = action.payload;
+      } else {
+        state.error = action.error;
+      }
+    });
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setProducts } = productsSlice.actions;
+export const { setProducts, setActiveProduct } = productsSlice.actions;
 
 export default productsSlice.reducer;

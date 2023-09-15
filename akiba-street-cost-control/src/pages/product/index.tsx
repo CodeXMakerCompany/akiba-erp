@@ -1,7 +1,7 @@
 import { Add } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { Container } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   feedInputsOptions,
@@ -63,6 +63,10 @@ const ProductPage = () => {
   const LoadedData: any = useLoaderData();
   const navigation = useNavigation();
 
+  useEffect(() => {
+    dispatch(feedInputsOptions(LoadedData?.categoryResponse?.categories));
+  }, [useLoaderData]);
+
   return (
     <Container>
       <h1>Product</h1>
@@ -70,11 +74,7 @@ const ProductPage = () => {
         <Button
           variant="contained"
           endIcon={<Add />}
-          onClick={() =>
-            dispatch(
-              feedInputsOptions(LoadedData?.categoryResponse?.categories)
-            ) && dispatch(updateModalStatus())
-          }
+          onClick={() => dispatch(updateModalStatus())}
         >
           Add new product
         </Button>

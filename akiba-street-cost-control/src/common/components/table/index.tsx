@@ -19,10 +19,12 @@ import {
   productAttributes,
 } from "./types";
 import { Button } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Cancel, Edit, Remove } from "@mui/icons-material";
 import { updateModalStatus } from "../../../redux/slices/modal/modal.slice";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
+import { removeProduct } from "../../../redux/slices/products/actions/removeProduct";
+import { setActiveProduct } from "../../../redux/slices/products/products.slice";
 
 type RowProps = {
   row: any;
@@ -66,8 +68,14 @@ function Row({ row, entity, options: { dispatch } }: RowProps) {
   const [open, setOpen] = React.useState(false);
   const { rowTypes, attributes } = generateRowtypesAndAttributes(entity);
   const handleEdit = () => {
+    dispatch(setActiveProduct(row));
     dispatch(updateModalStatus({ id: row?._id, entity, mode: "Edit" }));
   };
+
+  const handleDelete = async () => {
+    await dispatch(removeProduct(row?._id));
+  };
+
   return (
     <React.Fragment>
       <>
@@ -82,15 +90,25 @@ function Row({ row, entity, options: { dispatch } }: RowProps) {
             </IconButton>
           </TableCell>
           {attributes
-            ? attributes.map((attribute) => (
-                <TableCell align="right">
-                  {attribute === "image" ? (
-                    <MediaRow media={row[attribute as keyof typeof rowTypes]} />
-                  ) : (
-                    row[attribute as keyof typeof rowTypes]
-                  )}
-                </TableCell>
-              ))
+            ? attributes.map((attribute) => {
+                const activeElement = row[attribute as keyof typeof rowTypes];
+                return (
+                  <TableCell align="right">
+                    {/* {typeof attribute === "object" ? "si" : "n0"} */}
+                    {attribute === "image" ? (
+                      <MediaRow
+                        media={row[attribute as keyof typeof rowTypes]}
+                      />
+                    ) : (
+                      <>
+                        {typeof activeElement === "object"
+                          ? activeElement?.name
+                          : activeElement}
+                      </>
+                    )}
+                  </TableCell>
+                );
+              })
             : null}
         </TableRow>
         <TableRow>
@@ -100,38 +118,24 @@ function Row({ row, entity, options: { dispatch } }: RowProps) {
                 <Typography variant="h6" gutterBottom component="div">
                   Record Details
                 </Typography>
-                <Button
-                  variant="contained"
-                  endIcon={<Edit />}
-                  onClick={handleEdit}
-                >
-                  {" "}
-                  Edit{" "}
-                </Button>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Date</TableCell>
-                      <TableCell>Customer</TableCell>
-                      <TableCell align="right">Amount</TableCell>
-                      <TableCell align="right">Total price ($)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {/* {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))} */}
-                  </TableBody>
-                </Table>
+                <Box display={"flex"} gap={5}>
+                  <Button
+                    variant="contained"
+                    endIcon={<Edit />}
+                    onClick={handleEdit}
+                  >
+                    {" "}
+                    Edit{" "}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    endIcon={<Cancel />}
+                    onClick={handleDelete}
+                  >
+                    {" "}
+                    Remove{" "}
+                  </Button>
+                </Box>
               </Box>
             </Collapse>
           </TableCell>
@@ -150,7 +154,6 @@ export const CollapsibleTable = ({
   entity: string;
 }) => {
   const dispatch = useDispatch();
-  console.log(data);
 
   return (
     <TableContainer component={Paper}>
