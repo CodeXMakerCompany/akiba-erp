@@ -4,5 +4,7 @@ export const TCGSubcategories = [
   "WEISS",
   "YUGIOH",
   "ANIME",
+  "KINGSHIELD",
+  "DRAGONSHIELD",
   "OTHERS",
 ];
