@@ -35,14 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPublicS3Object = exports.getS3ObjectSigned = exports.uploadToS3 = void 0;
+var dotenv = require("dotenv");
+require("dotenv/config");
+dotenv.config();
 var client_s3_1 = require("@aws-sdk/client-s3");
 var s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
-var uuid_1 = require("uuid");
-var accessKeyId = (_a = process.env.AWSACCESSKEYID) !== null && _a !== void 0 ? _a : "";
-var secretAccessKey = (_b = process.env.AWSSECRETACCESSKEY) !== null && _b !== void 0 ? _b : "";
+var accessKeyId = process.env.AWSACCESSKEYID;
+var secretAccessKey = process.env.AWSSECRETACCESSKEY;
 var s3 = new client_s3_1.S3Client({
     region: "us-east-1",
     credentials: {
@@ -54,14 +55,13 @@ var Bucket = process.env.BUCKET;
 var uploadToS3 = function (_a) {
     var file = _a.file;
     return __awaiter(void 0, void 0, void 0, function () {
-        var key, command, error_1;
+        var command, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    key = (0, uuid_1.v4)();
                     command = new client_s3_1.PutObjectCommand({
                         Bucket: Bucket,
-                        Key: key,
+                        Key: file.originalname,
                         ACL: "public-read",
                         Body: file.buffer,
                         ContentType: file.mimetype,
@@ -72,7 +72,7 @@ var uploadToS3 = function (_a) {
                     return [4 /*yield*/, s3.send(command)];
                 case 2:
                     _b.sent();
-                    return [2 /*return*/, { key: key }];
+                    return [2 /*return*/, { key: file.originalname }];
                 case 3:
                     error_1 = _b.sent();
                     console.log(error_1);

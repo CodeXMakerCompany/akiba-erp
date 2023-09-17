@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { localBaseUrl } from "../../../../constants/endpoints";
+
 import axios from "axios";
+import { baseURL } from "../../../../api/api";
 
 export const getAllProducts = createAsyncThunk("product/all", async () => {
-  const productsUrl = `${localBaseUrl}/product/all`;
+  const productsUrl = `${baseURL}/product/all`;
   try {
     const productsResponse = await axios.get(productsUrl);
     return productsResponse.data.products;

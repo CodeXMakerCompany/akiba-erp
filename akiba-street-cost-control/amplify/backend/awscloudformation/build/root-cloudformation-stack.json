@@ -152,17 +152,6 @@
         }
       }
     },
-    "functionakibaStreetApiLambda": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-akibastreetcostcontr-prod-95824-deployment/amplify-cfn-templates/function/akibaStreetApiLambda-cloudformation-template.json",
-        "Parameters": {
-          "deploymentBucketName": "amplify-akibastreetcostcontr-prod-95824-deployment",
-          "s3Key": "amplify-builds/akibaStreetApiLambda-48514763657368314443-build.zip",
-          "env": "prod"
-        }
-      }
-    },
     "apiakibaApi": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
@@ -180,6 +169,17 @@
               "Outputs.Arn"
             ]
           },
+          "env": "prod"
+        }
+      }
+    },
+    "functionakibaStreetApiLambda": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-akibastreetcostcontr-prod-95824-deployment/amplify-cfn-templates/function/akibaStreetApiLambda-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-akibastreetcostcontr-prod-95824-deployment",
+          "s3Key": "amplify-builds/akibaStreetApiLambda-5277306f5273672f432f-build.zip",
           "env": "prod"
         }
       }

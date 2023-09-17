@@ -4,28 +4,60 @@ import { scrappeWixossCards } from "../scrapper/wixoss/scrappeWixossCards";
 import { scrappeShadowverseCards } from "../scrapper/shadowverse";
 import { scrappeWixossRarities } from "../scrapper/wixoss/scrappeWixossRarities";
 import { scrappeShadowverseRarities } from "../scrapper/shadowverse/scrappeShadowverseRarities";
+import { scrappeWixossClasses } from "../scrapper/wixoss/scrappeWixossClasses";
+import { scrappeShadowverseTraits } from "../scrapper/shadowverse/scrappeShadowverseTraits";
+
 import cardSchema from "../models/card";
 import raritySchema from "../models/rarities";
 import categorySchema from "../models/category";
+import classSchema from "../models/class";
 
 const getCards = async (req: Request, res: Response, next: NextFunction) => {
   const { page, size } = req.params;
   try {
-    const { team, rarity, selectedClass, types, product_type, tcg } = req.query;
+    const { team, rarity, selectedClass, types, product_type, tcg, card_no } =
+      req.query;
 
-    const options = {
+    let options: any = {
       page: page,
       limit: size,
       sort: { _id: -1 },
     };
 
-    let query: any = { tcg: { $regex: `^${tcg}$`, $options: "i" } };
-
-    team ? (query.master = team) : "";
-    rarity ? (query.rarity = rarity) : "";
-    selectedClass ? (query.LRIG_SIGNI_type = selectedClass) : "";
-    types ? (query.card_type = types) : "";
-    product_type ? (query.product_type = product_type) : "";
+    let query = {
+      tcg: { $regex: `^${tcg}$`, $options: "i" },
+      ...(rarity && {
+        rarity: { $regex: rarity, $options: "i" },
+      }),
+      ...(team
+        ? {
+            team,
+          }
+        : null),
+      ...(selectedClass
+        ? {
+            $or: [
+              { fllabor_text: selectedClass },
+              { LRIG_SIGNI_type: selectedClass },
+            ],
+          }
+        : null),
+      ...(types
+        ? {
+            card_type: types,
+          }
+        : null),
+      ...(product_type
+        ? {
+            product_type,
+          }
+        : null),
+      ...(card_no
+        ? {
+            card_no,
+          }
+        : null),
+    };
 
     const cards = await cardSchema.paginate({ ...options, query });
 
@@ -74,6 +106,35 @@ const updateShadowverseCards = async (
   const { setname } = req.body;
   try {
     await scrappeShadowverseCards(setname);
+
+    return res.status(200).send({
+      status: "success",
+      model: "TCG",
+      response: "done",
+    });
+  } catch (error) {
+    return res.status(412).send({
+      status: "error",
+      model: "TCG",
+      error: error,
+    });
+  }
+};
+
+const updateClasses = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { endpoint, tcg } = req.body;
+  try {
+    if (tcg === "wixoss") {
+      await scrappeWixossClasses(endpoint);
+    }
+
+    if (tcg === "shadowverse") {
+      await scrappeShadowverseTraits(endpoint);
+    }
 
     return res.status(200).send({
       status: "success",
@@ -202,6 +263,33 @@ const getRariritiesByTCG = async (
   }
 };
 
+const getClassesByTCG = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { tcg } = req.params;
+
+  try {
+    let query: any = { name: { $regex: `^${tcg}$`, $options: "i" } };
+    const category = await categorySchema.findOne({ ...query });
+
+    const classes = await classSchema.find({ categoryId: category._id });
+
+    res.status(200).send({
+      status: "success",
+      message: "Classes found",
+      data: classes,
+    });
+  } catch (error) {
+    return res.status(412).send({
+      status: "error",
+      model: "TCG",
+      error: error,
+    });
+  }
+};
+
 const updateSingleCard = async (
   req: Request,
   res: Response,
@@ -236,5 +324,7 @@ export default {
   updateCardsPrices,
   updateWixossRarities,
   getRariritiesByTCG,
+  getClassesByTCG,
   updateSingleCard,
+  updateClasses,
 };

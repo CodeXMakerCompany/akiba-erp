@@ -92,27 +92,33 @@ var getUserCart = function (req, res, next) { return __awaiter(void 0, void 0, v
 }); };
 var addItemToCart = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, item, userId, activeCart, products, targetItem, updatedCart, error_2;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 _a = req.body, item = _a.item, userId = _a.userId;
-                _b.label = 1;
+                _c.label = 1;
             case 1:
-                _b.trys.push([1, 6, , 7]);
+                _c.trys.push([1, 6, , 7]);
                 return [4 /*yield*/, cart_1.default.findOne({ userId: userId })];
             case 2:
-                activeCart = _b.sent();
+                activeCart = _c.sent();
                 if (!activeCart) return [3 /*break*/, 4];
                 products = __spreadArray([], activeCart.products, true);
-                targetItem = products.filter(function (product) { return product.id === item._id; })[0];
+                targetItem = products.find(function (product) { return product.id === item._id; });
                 if (!targetItem) {
-                    products.push({
-                        id: item._id,
-                        name: item.name,
-                        customerPrice: item.prices[0].sellPrice,
-                        image: item.image,
-                        quantity: 1,
-                    });
+                    products = __spreadArray(__spreadArray([], products, true), [
+                        {
+                            id: item._id,
+                            name: item.name,
+                            customerPrice: ((_b = item === null || item === void 0 ? void 0 : item.prices) === null || _b === void 0 ? void 0 : _b.length)
+                                ? item === null || item === void 0 ? void 0 : item.prices[0].sellPrice
+                                : item.customerPrice,
+                            image: item.image,
+                            stock: item.stock,
+                            quantity: 1,
+                        },
+                    ], false);
                 }
                 else {
                     products = products.map(function (product) {
@@ -127,18 +133,19 @@ var addItemToCart = function (req, res, next) { return __awaiter(void 0, void 0,
                         products: products,
                     })];
             case 3:
-                _b.sent();
-                _b.label = 4;
+                _c.sent();
+                _c.label = 4;
             case 4: return [4 /*yield*/, cart_1.default.findOne({ userId: userId })];
             case 5:
-                updatedCart = _b.sent();
+                updatedCart = _c.sent();
                 return [2 /*return*/, res.status(200).send({
                         status: "success",
                         model: "Cart",
                         cart: updatedCart,
                     })];
             case 6:
-                error_2 = _b.sent();
+                error_2 = _c.sent();
+                console.log(error_2);
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Cart",
@@ -167,6 +174,9 @@ var updateItemInCart = function (req, res, next) { return __awaiter(void 0, void
                         return __assign(__assign({}, product), { quantity: quantity });
                     }
                     return product;
+                });
+                products = products.filter(function (product) {
+                    return product.quantity !== "0";
                 });
                 return [4 /*yield*/, cart_1.default.updateOne({ userId: userId }, {
                         products: products,

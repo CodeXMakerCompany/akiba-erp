@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var mongoose_paginate_ts_1 = require("mongoose-paginate-ts");
-var productSchema = mongoose_1.default.model("Product", new mongoose_1.default.Schema({
+var schema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,
@@ -23,9 +23,15 @@ var productSchema = mongoose_1.default.model("Product", new mongoose_1.default.S
         type: Number,
         required: true,
     },
+    sold: {
+        type: Number,
+    },
     category: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "Category",
+    },
+    subcategory: {
+        type: String,
     },
     image: {
         type: String,
@@ -39,6 +45,7 @@ var productSchema = mongoose_1.default.model("Product", new mongoose_1.default.S
         type: Date,
         default: Date.now,
     },
-}));
-productSchema.schema.plugin(mongoose_paginate_ts_1.mongoosePagination);
+});
+schema.plugin(mongoose_paginate_ts_1.mongoosePagination);
+var productSchema = mongoose_1.default.model("Product", schema);
 exports.default = productSchema;

@@ -1,13 +1,15 @@
+import * as dotenv from "dotenv";
+import "dotenv/config";
+dotenv.config();
 import {
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { v4 as uuidv4 } from "uuid";
 
-const accessKeyId: string = process.env.AWSACCESSKEYID ?? "";
-const secretAccessKey: string = process.env.AWSSECRETACCESSKEY ?? "";
+const accessKeyId: string = process.env.AWSACCESSKEYID as string;
+const secretAccessKey: string = process.env.AWSSECRETACCESSKEY as string;
 const s3 = new S3Client({
   region: "us-east-1",
   credentials: {
@@ -18,10 +20,9 @@ const s3 = new S3Client({
 const Bucket = process.env.BUCKET;
 
 export const uploadToS3 = async ({ file }: any) => {
-  const key = uuidv4();
   const command = new PutObjectCommand({
     Bucket,
-    Key: key,
+    Key: file.originalname,
     ACL: "public-read",
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -30,7 +31,7 @@ export const uploadToS3 = async ({ file }: any) => {
   try {
     await s3.send(command);
 
-    return { key };
+    return { key: file.originalname };
   } catch (error) {
     console.log(error);
     return { error };

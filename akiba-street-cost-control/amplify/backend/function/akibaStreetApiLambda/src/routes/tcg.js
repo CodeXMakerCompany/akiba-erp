@@ -11,4 +11,6 @@ router.post("/update-shadowverse-cards", tcg_controller_1.default.updateShadowve
 router.get("/get-cards/:page/:size/:team?/:rarity?/:selectedClass?/:types?/:tcg?", tcg_controller_1.default.getCards);
 router.put("/update-price-cards/:rarity/:buyPrice/:sellPrice/:category/:stock", tcg_controller_1.default.updateCardsPrices);
 router.put("/update-tcg-card", tcg_controller_1.default.updateSingleCard);
+router.post("/scrappe-tcg-classes", tcg_controller_1.default.updateClasses);
+router.get("/get-classes/:tcg", tcg_controller_1.default.getClassesByTCG);
 exports.default = router;

@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,52 +46,125 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var sale_1 = require("../models/sale");
+var card_1 = require("../models/card");
+var cart_1 = require("../models/cart");
+var product_1 = require("../models/product");
+var services_1 = require("../services");
+var constants_1 = require("../services/email/constants");
 var createSale = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, products, total, paymentMethod, user, productInvestment, realTotal, newSale, error_1;
+    var _a, products, total, customer_id, args, productInvestment, realTotal, newSale, emailProducts, activeCart, products_1, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.body, products = _a.products, total = _a.total, paymentMethod = _a.paymentMethod, user = _a.user;
+                _a = req.body, products = _a.products, total = _a.total, customer_id = _a.customer_id, args = __rest(_a, ["products", "total", "customer_id"]);
                 productInvestment = products.reduce(function (accumulator, object) {
-                    return accumulator + object.our_purchase_price * object.qty;
+                    return (accumulator +
+                        (object.our_purchase_price
+                            ? object.our_purchase_price
+                            : parseFloat(object.customerPrice) * 0.4) *
+                            object.qty);
                 }, 0);
                 realTotal = total - productInvestment;
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, sale_1.default.create({
-                        products: products,
-                        total: total,
-                        net_earning: realTotal,
-                        customer: user,
-                        payment_method: paymentMethod,
-                    })];
+                _b.trys.push([1, 10, , 11]);
+                return [4 /*yield*/, card_1.default.bulkWrite(products.map(function (card) { return ({
+                        updateOne: {
+                            filter: { _id: card.id },
+                            update: { $inc: { stock: -card.quantity, sold: +card.quantity } },
+                            upsert: false,
+                        },
+                    }); }))];
             case 2:
-                newSale = _b.sent();
-                return [2 /*return*/, res.status(200).send({
-                        status: "success",
-                        message: "Created Sale",
-                        createdItem: newSale,
-                    })];
+                _b.sent();
+                return [4 /*yield*/, product_1.default.bulkWrite(products.map(function (product) { return ({
+                        updateOne: {
+                            filter: { _id: product.id },
+                            update: {
+                                $inc: { stock: -product.quantity, sold: +product.quantity },
+                            },
+                            upsert: false,
+                        },
+                    }); }))];
             case 3:
+                _b.sent();
+                return [4 /*yield*/, sale_1.default.create(__assign({ products: products, total: total, net_earning: isNaN(realTotal) ? 0 : realTotal, customer_id: customer_id }, args))];
+            case 4:
+                newSale = _b.sent();
+                emailProducts = products.map(function (product) {
+                    var _a;
+                    var productsPrice = parseFloat(product === null || product === void 0 ? void 0 : product.customerPrice) * product.quantity;
+                    return {
+                        text: product === null || product === void 0 ? void 0 : product.name,
+                        image: product === null || product === void 0 ? void 0 : product.image,
+                        price: productsPrice === null || productsPrice === void 0 ? void 0 : productsPrice.toString(),
+                        quantity: (_a = product === null || product === void 0 ? void 0 : product.quantity) === null || _a === void 0 ? void 0 : _a.toString(),
+                    };
+                });
+                return [4 /*yield*/, services_1.EmailService.newOrderEmail({
+                        amount: total,
+                        currency: args.payment_currency,
+                        email: args.customer,
+                        orderId: newSale._id,
+                        products: emailProducts,
+                    })];
+            case 5:
+                _b.sent();
+                return [4 /*yield*/, services_1.EmailService.newOrderEmail({
+                        amount: total,
+                        currency: args.payment_currency,
+                        email: constants_1.SENDER_EMAIL,
+                        orderId: newSale._id,
+                        products: emailProducts,
+                    })];
+            case 6:
+                _b.sent();
+                return [4 /*yield*/, cart_1.default.findOne({ userId: customer_id })];
+            case 7:
+                activeCart = _b.sent();
+                if (!activeCart) return [3 /*break*/, 9];
+                products_1 = [];
+                return [4 /*yield*/, cart_1.default.updateOne({ userId: customer_id }, {
+                        products: products_1,
+                    })];
+            case 8:
+                _b.sent();
+                _b.label = 9;
+            case 9: return [2 /*return*/, res.status(200).send({
+                    status: "success",
+                    message: "Created Sale",
+                    createdItem: newSale,
+                })];
+            case 10:
                 error_1 = _b.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         message: "Error creating Sale",
                         error: error_1,
                     })];
-            case 4: return [2 /*return*/];
+            case 11: return [2 /*return*/];
         }
     });
 }); };
 var getSales = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, page, limit, startDate, endDate, options, results;
+    var _a, userId, page, limit, startDate, endDate, options, results;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.body, page = _a.page, limit = _a.limit, startDate = _a.startDate, endDate = _a.endDate;
+                _a = req.body, userId = _a.userId, page = _a.page, limit = _a.limit, startDate = _a.startDate, endDate = _a.endDate;
                 options = {
                     page: page,
                     limit: limit,
@@ -89,7 +173,9 @@ var getSales = function (req, res, next) { return __awaiter(void 0, void 0, void
                     },
                     sort: { created_at: -1 },
                 };
-                return [4 /*yield*/, sale_1.default.paginate(options)];
+                return [4 /*yield*/, sale_1.default.paginate(__assign(__assign({}, options), { query: {
+                            customer_id: userId,
+                        } }))];
             case 1:
                 results = _b.sent();
                 try {

@@ -20,4 +20,7 @@ router.put(
 );
 router.put("/update-tcg-card", tcgController.updateSingleCard);
 
+router.post("/scrappe-tcg-classes", tcgController.updateClasses);
+router.get("/get-classes/:tcg", tcgController.getClassesByTCG);
+
 export default router;

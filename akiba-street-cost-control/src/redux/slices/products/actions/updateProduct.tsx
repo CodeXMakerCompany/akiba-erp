@@ -1,15 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { localBaseUrl } from "../../../../constants/endpoints";
 import axios from "axios";
 import { getAllProducts } from "./getAllProducts";
 import { enqueueSnackbar } from "notistack";
 import { updateModalStatus } from "../../modal/modal.slice";
 import { ProductPayloadProps } from "./createProduct";
+import { baseURL } from "../../../../api/api";
 
 export const updateProduct = createAsyncThunk(
   "updateProduct",
   async (productPayload: ProductPayloadProps, { dispatch }) => {
-    const productsUrl = `${localBaseUrl}/product/update`;
+    const productsUrl = `${baseURL}/product/update`;
 
     try {
       const productsResponse = await axios.put(productsUrl, productPayload);

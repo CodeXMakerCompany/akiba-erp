@@ -22,7 +22,6 @@ export const scrappeShadowverseRarities = async (endpoint) => {
       values.push({ name: value });
     }
   });
-  console.log(shadowverseCategory._id);
 
   return await RaritiesModel.bulkWrite(
     values.map((item) => ({

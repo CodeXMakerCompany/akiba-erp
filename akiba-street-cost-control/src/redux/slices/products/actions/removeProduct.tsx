@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { localBaseUrl } from "../../../../constants/endpoints";
 import axios from "axios";
 import { getAllProducts } from "./getAllProducts";
 import { enqueueSnackbar } from "notistack";
+import { baseURL } from "../../../../api/api";
 
 export const removeProduct = createAsyncThunk(
   "removeProduct",
   async (id: string, { dispatch }) => {
-    const productsUrl = `${localBaseUrl}/product/delete/${id}`;
+    const productsUrl = `${baseURL}/product/delete/${id}`;
 
     try {
       const productsResponse = await axios.delete(productsUrl);

@@ -73,7 +73,6 @@ var scrappeShadowverseRarities = function (endpoint) { return __awaiter(void 0, 
                         values.push({ name: value });
                     }
                 });
-                console.log(shadowverseCategory._id);
                 return [4 /*yield*/, rarities_1.default.bulkWrite(values.map(function (item) { return ({
                         updateOne: {
                             filter: { name: item.name },

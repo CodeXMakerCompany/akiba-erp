@@ -62,11 +62,14 @@ var scrappeWixossCards_1 = require("../scrapper/wixoss/scrappeWixossCards");
 var shadowverse_1 = require("../scrapper/shadowverse");
 var scrappeWixossRarities_1 = require("../scrapper/wixoss/scrappeWixossRarities");
 var scrappeShadowverseRarities_1 = require("../scrapper/shadowverse/scrappeShadowverseRarities");
+var scrappeWixossClasses_1 = require("../scrapper/wixoss/scrappeWixossClasses");
+var scrappeShadowverseTraits_1 = require("../scrapper/shadowverse/scrappeShadowverseTraits");
 var card_1 = require("../models/card");
 var rarities_1 = require("../models/rarities");
 var category_1 = require("../models/category");
+var class_1 = require("../models/class");
 var getCards = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, page, size, _b, team, rarity, selectedClass, types, product_type, tcg, options, query, cards, error_1;
+    var _a, page, size, _b, team, rarity, selectedClass, types, product_type, tcg, card_no, options, query, cards, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
@@ -74,18 +77,38 @@ var getCards = function (req, res, next) { return __awaiter(void 0, void 0, void
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 3, , 4]);
-                _b = req.query, team = _b.team, rarity = _b.rarity, selectedClass = _b.selectedClass, types = _b.types, product_type = _b.product_type, tcg = _b.tcg;
+                _b = req.query, team = _b.team, rarity = _b.rarity, selectedClass = _b.selectedClass, types = _b.types, product_type = _b.product_type, tcg = _b.tcg, card_no = _b.card_no;
                 options = {
                     page: page,
                     limit: size,
                     sort: { _id: -1 },
                 };
-                query = { tcg: { $regex: "^".concat(tcg, "$"), $options: "i" } };
-                team ? (query.master = team) : "";
-                rarity ? (query.rarity = rarity) : "";
-                selectedClass ? (query.LRIG_SIGNI_type = selectedClass) : "";
-                types ? (query.card_type = types) : "";
-                product_type ? (query.product_type = product_type) : "";
+                query = __assign(__assign(__assign(__assign(__assign(__assign({ tcg: { $regex: "^".concat(tcg, "$"), $options: "i" } }, (rarity && {
+                    rarity: { $regex: rarity, $options: "i" },
+                })), (team
+                    ? {
+                        team: team,
+                    }
+                    : null)), (selectedClass
+                    ? {
+                        $or: [
+                            { fllabor_text: selectedClass },
+                            { LRIG_SIGNI_type: selectedClass },
+                        ],
+                    }
+                    : null)), (types
+                    ? {
+                        card_type: types,
+                    }
+                    : null)), (product_type
+                    ? {
+                        product_type: product_type,
+                    }
+                    : null)), (card_no
+                    ? {
+                        card_no: card_no,
+                    }
+                    : null));
                 return [4 /*yield*/, card_1.default.paginate(__assign(__assign({}, options), { query: query }))];
             case 2:
                 cards = _c.sent();
@@ -162,6 +185,42 @@ var updateShadowverseCards = function (req, res, next) { return __awaiter(void 0
         }
     });
 }); };
+var updateClasses = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, endpoint, tcg, error_4;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, endpoint = _a.endpoint, tcg = _a.tcg;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 6, , 7]);
+                if (!(tcg === "wixoss")) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, scrappeWixossClasses_1.scrappeWixossClasses)(endpoint)];
+            case 2:
+                _b.sent();
+                _b.label = 3;
+            case 3:
+                if (!(tcg === "shadowverse")) return [3 /*break*/, 5];
+                return [4 /*yield*/, (0, scrappeShadowverseTraits_1.scrappeShadowverseTraits)(endpoint)];
+            case 4:
+                _b.sent();
+                _b.label = 5;
+            case 5: return [2 /*return*/, res.status(200).send({
+                    status: "success",
+                    model: "TCG",
+                    response: "done",
+                })];
+            case 6:
+                error_4 = _b.sent();
+                return [2 /*return*/, res.status(412).send({
+                        status: "error",
+                        model: "TCG",
+                        error: error_4,
+                    })];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); };
 var updateCardsPrices = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, rarity, buyPrice, sellPrice, category, stock;
     return __generator(this, function (_b) {
@@ -202,34 +261,6 @@ var updateCardsPrices = function (req, res, next) { return __awaiter(void 0, voi
     });
 }); };
 var updateWixossRarities = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var endpoint, error_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                endpoint = req.body.endpoint;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, (0, scrappeWixossRarities_1.scrappeWixossRarities)(endpoint)];
-            case 2:
-                _a.sent();
-                return [2 /*return*/, res.status(200).send({
-                        status: "success",
-                        model: "TCG",
-                        response: "done",
-                    })];
-            case 3:
-                error_4 = _a.sent();
-                return [2 /*return*/, res.status(412).send({
-                        status: "error",
-                        model: "TCG",
-                        error: error_4,
-                    })];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-var updateShadowverseRarities = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var endpoint, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -238,7 +269,7 @@ var updateShadowverseRarities = function (req, res, next) { return __awaiter(voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, (0, scrappeShadowverseRarities_1.scrappeShadowverseRarities)(endpoint)];
+                return [4 /*yield*/, (0, scrappeWixossRarities_1.scrappeWixossRarities)(endpoint)];
             case 2:
                 _a.sent();
                 return [2 /*return*/, res.status(200).send({
@@ -257,8 +288,36 @@ var updateShadowverseRarities = function (req, res, next) { return __awaiter(voi
         }
     });
 }); };
+var updateShadowverseRarities = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var endpoint, error_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                endpoint = req.body.endpoint;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, (0, scrappeShadowverseRarities_1.scrappeShadowverseRarities)(endpoint)];
+            case 2:
+                _a.sent();
+                return [2 /*return*/, res.status(200).send({
+                        status: "success",
+                        model: "TCG",
+                        response: "done",
+                    })];
+            case 3:
+                error_6 = _a.sent();
+                return [2 /*return*/, res.status(412).send({
+                        status: "error",
+                        model: "TCG",
+                        error: error_6,
+                    })];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 var getRariritiesByTCG = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var tcg, query, category, rarities, error_6;
+    var tcg, query, category, rarities, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -280,18 +339,51 @@ var getRariritiesByTCG = function (req, res, next) { return __awaiter(void 0, vo
                 });
                 return [3 /*break*/, 5];
             case 4:
-                error_6 = _a.sent();
+                error_7 = _a.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "TCG",
-                        error: error_6,
+                        error: error_7,
+                    })];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+var getClassesByTCG = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var tcg, query, category, classes, error_8;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                tcg = req.params.tcg;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                query = { name: { $regex: "^".concat(tcg, "$"), $options: "i" } };
+                return [4 /*yield*/, category_1.default.findOne(__assign({}, query))];
+            case 2:
+                category = _a.sent();
+                return [4 /*yield*/, class_1.default.find({ categoryId: category._id })];
+            case 3:
+                classes = _a.sent();
+                res.status(200).send({
+                    status: "success",
+                    message: "Classes found",
+                    data: classes,
+                });
+                return [3 /*break*/, 5];
+            case 4:
+                error_8 = _a.sent();
+                return [2 /*return*/, res.status(412).send({
+                        status: "error",
+                        model: "TCG",
+                        error: error_8,
                     })];
             case 5: return [2 /*return*/];
         }
     });
 }); };
 var updateSingleCard = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, id, args, error_7;
+    var _a, id, args, error_9;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -308,11 +400,11 @@ var updateSingleCard = function (req, res, next) { return __awaiter(void 0, void
                         response: "Card updated succesfully",
                     })];
             case 3:
-                error_7 = _b.sent();
+                error_9 = _b.sent();
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "TCG",
-                        error: error_7,
+                        error: error_9,
                     })];
             case 4: return [2 /*return*/];
         }
@@ -326,5 +418,7 @@ exports.default = {
     updateCardsPrices: updateCardsPrices,
     updateWixossRarities: updateWixossRarities,
     getRariritiesByTCG: getRariritiesByTCG,
+    getClassesByTCG: getClassesByTCG,
     updateSingleCard: updateSingleCard,
+    updateClasses: updateClasses,
 };

@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcryptjs");
 var user_1 = require("../../models/user");
 var register = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, email, password, rol, hashedPass, targetUser, createdUser, error_1;

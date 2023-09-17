@@ -30,25 +30,28 @@ const addItemToCart = async (
   next: NextFunction
 ) => {
   const { item, userId } = req.body;
-
   try {
     const activeCart = await Cart.findOne({ userId });
 
     if (activeCart) {
-      let products = [...activeCart.products];
+      let products = [...activeCart.products] as any;
 
-      const targetItem = products.filter(
-        (product) => product.id === item._id
-      )[0];
+      const targetItem = products.find((product) => product.id === item._id);
 
       if (!targetItem) {
-        products.push({
-          id: item._id,
-          name: item.name,
-          customerPrice: item.prices[0].sellPrice,
-          image: item.image,
-          quantity: 1,
-        });
+        products = [
+          ...products,
+          {
+            id: item._id,
+            name: item.name,
+            customerPrice: item?.prices?.length
+              ? item?.prices[0].sellPrice
+              : item.customerPrice,
+            image: item.image,
+            stock: item.stock,
+            quantity: 1,
+          },
+        ];
       } else {
         products = products.map((product) => {
           const quantity = parseInt(product.quantity);
@@ -78,6 +81,8 @@ const addItemToCart = async (
       cart: updatedCart,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(412).send({
       status: "error",
       model: "Cart",
@@ -107,6 +112,10 @@ const updateItemInCart = async (
           };
         }
         return product;
+      });
+
+      products = products.filter((product) => {
+        return product.quantity !== "0";
       });
 
       await Cart.updateOne(

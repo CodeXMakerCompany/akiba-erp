@@ -2,6 +2,9 @@ import * as cors from "cors";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as awsServerlessExpressMiddleware from "aws-serverless-express/middleware";
+import * as dotenv from "dotenv";
+import "dotenv/config";
+dotenv.config();
 import db from "./config/db";
 
 import UserRoutes from "./routes/user";
@@ -12,10 +15,9 @@ import ProductRoutes from "./routes/product";
 import EventRoutes from "./routes/events";
 import TcgRoutes from "./routes/tcg";
 import CartRoutes from "./routes/cart";
-
-import * as dotenv from "dotenv";
-import "dotenv/config";
-dotenv.config();
+import TemplateRoutes from "./routes/template";
+import PaymentRoutes from "./routes/payment";
+import EmailRoutes from "./routes/email";
 // declare a new express app
 const app: express.Application = express();
 const port: number | string = process.env.SERVER_PORT || 6666;
@@ -49,6 +51,9 @@ app.use("/api/product", ProductRoutes);
 app.use("/api/event", EventRoutes);
 app.use("/api/tcg", TcgRoutes);
 app.use("/api/cart", CartRoutes);
+app.use("/api/template", TemplateRoutes);
+app.use("/api/payment", PaymentRoutes);
+app.use("/api/email", EmailRoutes);
 
 app.listen(port, () => {
   console.log("App started", port);

@@ -1,4 +1,4 @@
 import { login } from "./login";
 import { register } from "./register";
-
-export { register, login };
+import { getbyId } from "./getById";
+export { register, login, getbyId };

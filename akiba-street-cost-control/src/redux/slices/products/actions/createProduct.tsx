@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { localBaseUrl } from "../../../../constants/endpoints";
+
 import axios from "axios";
 import { getAllProducts } from "./getAllProducts";
 import { enqueueSnackbar } from "notistack";
 import { updateModalStatus } from "../../modal/modal.slice";
+import { baseURL } from "../../../../api/api";
 
 export interface ProductPayloadProps {
   _id?: string;
@@ -19,7 +20,7 @@ export interface ProductPayloadProps {
 export const createProduct = createAsyncThunk(
   "createProduct",
   async (productPayload: ProductPayloadProps, { dispatch }) => {
-    const productsUrl = `${localBaseUrl}/product/create`;
+    const productsUrl = `${baseURL}/product/create`;
 
     try {
       const productsResponse = await axios.post(productsUrl, productPayload);

@@ -46,7 +46,9 @@ var uploadData = function (req, res, next) { return __awaiter(void 0, void 0, vo
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 5, , 6]);
-                return [4 /*yield*/, (0, config_1.uploadToS3)({ file: file })];
+                return [4 /*yield*/, (0, config_1.uploadToS3)({
+                        file: file,
+                    })];
             case 2:
                 _a = _b.sent(), error = _a.error, key = _a.key;
                 if (!key) return [3 /*break*/, 4];
@@ -58,11 +60,10 @@ var uploadData = function (req, res, next) { return __awaiter(void 0, void 0, vo
                         model: "Upload succesfully",
                         image: image,
                     })];
-            case 4:
-                console.log(error);
-                return [3 /*break*/, 6];
+            case 4: return [3 /*break*/, 6];
             case 5:
                 warn_1 = _b.sent();
+                console.log(warn_1);
                 return [2 /*return*/, res.status(412).send({
                         status: "error",
                         model: "Upload error",

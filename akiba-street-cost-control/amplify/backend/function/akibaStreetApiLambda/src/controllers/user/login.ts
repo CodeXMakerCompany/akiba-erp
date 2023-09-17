@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import User from "../../models/user";
 export const login = async (
@@ -12,18 +12,19 @@ export const login = async (
   try {
     const foundUser: any = await User.findOne({ email: username });
 
-    if (foundUser._id) {
-      const user = { ...foundUser._doc };
+    if (foundUser?._id) {
+      const user = { ...foundUser?._doc };
       const token = jwt.sign(user, "AKIBASHOP", {
         expiresIn: 60 * 60 * 24,
       });
       // Check for social login
+
       if (password == null || password == undefined) {
         return res.status(200).send({
           status: "success",
-          message: "Login correct",
-          user,
-          token,
+          message: "Login incorrect, password is missing",
+          // user,
+          // token,
         });
       }
 

@@ -13,8 +13,11 @@ export interface IUser {
   name: String;
   surnames: String;
   email: String;
+  loginProvider: String;
   password: String;
   phone: String;
+  city: String;
+  country: String;
   address: IUserAddress;
   rol: String;
   description: String;
@@ -30,8 +33,11 @@ const schema = new Schema({
   name: { type: String, trim: true },
   surnames: { type: String, trim: true },
   email: { type: String, trim: true },
+  loginProvider: { type: String, trim: true },
   password: { type: String, trim: true },
   phone: { type: String, trim: true },
+  city: { type: String, trim: true },
+  country: { type: String, trim: true },
   address: { type: Object },
   rol: { type: String, trim: true },
   description: { type: String, trim: true },

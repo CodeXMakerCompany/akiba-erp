@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = void 0;
 var jwt = require("jsonwebtoken");
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcryptjs");
 var user_1 = require("../../models/user");
 var login = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, username, password, foundUser, user, token, validatePassword, error_1;
@@ -63,8 +63,8 @@ var login = function (req, res, next) { return __awaiter(void 0, void 0, void 0,
                 return [4 /*yield*/, user_1.default.findOne({ email: username })];
             case 2:
                 foundUser = _b.sent();
-                if (!foundUser._id) return [3 /*break*/, 4];
-                user = __assign({}, foundUser._doc);
+                if (!(foundUser === null || foundUser === void 0 ? void 0 : foundUser._id)) return [3 /*break*/, 4];
+                user = __assign({}, foundUser === null || foundUser === void 0 ? void 0 : foundUser._doc);
                 token = jwt.sign(user, "AKIBASHOP", {
                     expiresIn: 60 * 60 * 24,
                 });
@@ -72,9 +72,9 @@ var login = function (req, res, next) { return __awaiter(void 0, void 0, void 0,
                 if (password == null || password == undefined) {
                     return [2 /*return*/, res.status(200).send({
                             status: "success",
-                            message: "Login correct",
-                            user: user,
-                            token: token,
+                            message: "Login incorrect, password is missing",
+                            // user,
+                            // token,
                         })];
                 }
                 return [4 /*yield*/, bcrypt.compareSync(password, user.password)];
