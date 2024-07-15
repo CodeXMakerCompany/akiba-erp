@@ -1,0 +1,15 @@
+FROM node:16.15-alpine3.15
+
+# Create app directory
+WORKDIR /app
+
+COPY package.json .
+
+RUN yarn
+
+# Bundle app source
+COPY . .
+
+EXPOSE 3103
+
+CMD ["yarn","run", "start"]
