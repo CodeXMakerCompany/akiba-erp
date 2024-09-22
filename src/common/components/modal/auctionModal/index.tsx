@@ -71,7 +71,7 @@ const AuctionModal = () => {
         >
           {categories?.length
             ? categories.map((category: any) => (
-              <MenuItem value={category._id}>{category.name}</MenuItem>
+              <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
             ))
             : null}
         </Select>

@@ -47,7 +47,7 @@ const AuctionPage = () => {
     <h1>Auctions</h1>
     <div>
       <Button variant="contained" endIcon={<Add />} onClick={() => dispatch(updateModalStatus())}>
-        Add new category
+        Add new auction
       </Button>
       {navigation.state === "idle" ? (
         <DynamicTable headers={TableHeaders} data={auctions} entity={"auction"} />

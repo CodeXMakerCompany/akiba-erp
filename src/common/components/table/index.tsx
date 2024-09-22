@@ -157,7 +157,6 @@ export const CollapsibleTable = ({
   entity: string;
 }) => {
   const dispatch = useDispatch();
-  console.log(data);
 
   return (
     <TableContainer component={Paper}>
