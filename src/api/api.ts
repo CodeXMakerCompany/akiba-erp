@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export const baseURL =
   process.env.REACT_APP_ENV_ENVIRONMENT === "prod"
-    ? "https://wo7u13x69b.execute-api.us-east-2.amazonaws.com/prod/api"
+    ? "https://ftav0l2ixa.execute-api.us-east-2.amazonaws.com/prod/api/"
     : "http://localhost:3001/api";
 
 const apiInstance = (): AxiosInstance => {
