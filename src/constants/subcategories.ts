@@ -1,13 +1,41 @@
-export const TCGSubcategories = [
-  "WIXOSS",
-  "SHADOWVERSE",
-  "WEISS",
-  "YUGIOH",
-  "ANIME",
-  "KINGSHIELD",
-  "DRAGONSHIELD",
-  "OTHERS",
-];
+export const Subcategories = {
+  figures : [
+    "Good Smile Company",
+    "Kotobukiya",
+    "Alter",
+    "Figma",
+    "Banpresto",
+    "MegaHouse",
+    "FREEing",
+    "Furyu",
+    "Aniplex",
+    "SEGA",
+    "Phat! Company",
+    "Union Creative",
+    "BINDing",
+    "Ques Q",
+    "Taito",
+    "S.H Figuarts",
+    "S.H Monsterarts",
+    "Snail Shell",
+    "Pocket Arts",
+    "Takara Tommy" ,
+    "Apex",
+    "Revoltech",
+    "Emon Toys",
+    "Mafex"
+  ],
+  tcg: [
+    "WIXOSS",
+    "SHADOWVERSE",
+    "WEISS",
+    "YUGIOH",
+    "ANIME",
+    "KINGSHIELD",
+    "DRAGONSHIELD",
+    "OTHERS",
+  ]
+}
 
 export const TCGEvent = [
   "Wixoss",

@@ -3,7 +3,7 @@ const validFileTypes: string[] = [
   "image/png",
   "image/jpeg",
   "image/gif",
-  "image/jpg",
+  "image/jpg"
 ];
 
 const uploadData = async (data: any) => {

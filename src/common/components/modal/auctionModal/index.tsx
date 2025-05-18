@@ -1,12 +1,10 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { Container } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { createCategory } from "../../../../redux/slices/category/acions/createCategory";
 import { createAuction } from "../../../../redux/slices/auction/action/createAuction";
 import { AuctionPayloadProps } from "./types";
-import { TCGSubcategories } from "../../../../constants/subcategories";
 import { singleFileUpload } from "../../../../services/data-upload";
 import { setMediaPreview } from "../../../../redux/slices/uploads/uploads.slice";
 import { Label } from "../productModal";

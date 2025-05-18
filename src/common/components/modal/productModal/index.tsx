@@ -20,7 +20,7 @@ import "../styles.css";
 
 import { AppDispatch, RootState } from "../../../../redux/store";
 
-import { TCGSubcategories } from "../../../../constants/subcategories";
+import { Subcategories } from "../../../../constants/subcategories";
 import {
   ProductPayloadProps,
   createProduct,
@@ -32,7 +32,8 @@ import dayjs from "dayjs";
 
 const presaleCategory = "6686eb8fdeb4b13ca3cd1226"
 const tournamentsCategory = "668b2a5ed5f0b7e8a77d37ef"
-export const categoriesWithSubcategories = ["63c85a8813e30d984af3fb3a", "63c85a8d13e30d984af3fb3c", presaleCategory, tournamentsCategory]
+const figureCategory = '67afb1c7f16d74353cc8214e'
+export const categoriesWithSubcategories = ["63c85a8813e30d984af3fb3a", "63c85a8d13e30d984af3fb3c", presaleCategory, tournamentsCategory, figureCategory]
 
 export const Label = styled('label')`
   padding: 0 0 4px;
@@ -110,7 +111,8 @@ const ProductSale = () => {
         <Box mt={4}>
           <FormControl fullWidth>
             <Label id="demo-simple-select-label">
-              Tcg Sub-Category
+              { productForm.category === figureCategory ? 'Brand': 'Tcg Sub-Category' }
+              
             </Label>
             <Select
               labelId="demo-simple-select-label"
@@ -121,11 +123,11 @@ const ProductSale = () => {
                 setProductForm({ ...productForm, subcategory: target.value })
               }
             >
-              {TCGSubcategories?.length
-                ? TCGSubcategories.map((subcategory: string) => (
+              {
+                Subcategories[productForm.category === figureCategory ? 'figures': 'tcg'].map((subcategory: string) => (
                   <MenuItem value={subcategory}>{subcategory}</MenuItem>
                 ))
-                : null}
+              }
             </Select>
           </FormControl>
         </Box>
