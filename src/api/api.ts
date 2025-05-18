@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+console.log('ola bb', process.env.REACT_APP_ENV_ENVIRONMENT);
 
 export const baseURL =
   process.env.REACT_APP_ENV_ENVIRONMENT === "prod"

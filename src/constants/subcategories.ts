@@ -23,7 +23,9 @@ export const Subcategories = {
     "Apex",
     "Revoltech",
     "Emon Toys",
-    "Mafex"
+    "Mafex",
+    "Tomitec",
+    "JoyToy"
   ],
   tcg: [
     "WIXOSS",
